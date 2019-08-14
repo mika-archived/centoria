@@ -1,0 +1,10 @@
+[package]
+name = "centoria"
+description = "alias manager for Linux"
+version = "0.1.0"
+authors = ["Mikazuki Fuyuno <mikazuki_fuyuno@outlook.com>"]
+edition = "2018"
+readme = "README.md"
+license = "MIT"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
