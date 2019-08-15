@@ -66,3 +66,18 @@ pub fn load() -> Result<BTreeMap<String, Alias>, failure::Error> {
 
   return Ok(BTreeMap::new());
 }
+
+pub fn save(cfg: BTreeMap<String, Alias>) -> Result<(), failure::Error> {
+  let path = find_valid_path()?;
+  let toml_str = match toml::to_string_pretty(&cfg) {
+    Ok(value) => value,
+    Err(e) => {
+      let msg = failure::err_msg(format!("could not write configuration file because {}", e));
+      return Err(msg);
+    }
+  };
+
+  fs::write(path, toml_str)?;
+
+  return Ok(());
+}
