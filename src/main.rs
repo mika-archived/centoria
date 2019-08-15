@@ -20,7 +20,9 @@ fn main() -> Result<(), ExitFailure> {
 fn run() -> Result<(), failure::Error> {
     let matches = app::build_app().get_matches();
 
-    if let Some(matches) = matches.subcommand_matches("add") {
+    if let Some(_) = matches.subcommand_matches("init") {
+        commands::init()?;
+    } else if let Some(matches) = matches.subcommand_matches("add") {
         let name = matches.value_of("name").unwrap();
         let command = matches.value_of("command").unwrap();
         let condition = matches.value_of("condition");
