@@ -1,9 +1,11 @@
 #[macro_use]
 extern crate clap;
+extern crate dirs;
 extern crate exitfailure;
 extern crate failure;
 
 mod app;
+mod config;
 
 use exitfailure::ExitFailure;
 
