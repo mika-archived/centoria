@@ -13,6 +13,7 @@ pub fn add(name: &str, command: &str) -> Result<(), failure::Error> {
   let mut cfg: BTreeMap<String, Alias> = BTreeMap::from_iter(cfg.into_iter());
   cfg.insert(name.to_string(), create_alias(command));
   config::save(cfg)?;
+
   return Ok(());
 }
 
