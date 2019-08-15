@@ -1,4 +1,4 @@
 # Centoria
 
-Centoria - alias manager for Linux.
+Centoria - alias manager for macOS and Linux.
 
