@@ -3,6 +3,8 @@ extern crate clap;
 extern crate exitfailure;
 extern crate failure;
 
+mod app;
+
 use exitfailure::ExitFailure;
 
 fn main() -> Result<(), ExitFailure> {
