@@ -13,3 +13,6 @@ license = "MIT"
 name = "cet"
 path = "src/main.rs"
 
+[dependencies]
+exitfailure = "0.5.1"
+failure = "0.1.5"
