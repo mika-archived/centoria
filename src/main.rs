@@ -25,6 +25,10 @@ fn run() -> Result<(), failure::Error> {
         let command = matches.value_of("command").unwrap();
 
         commands::add(name, command)?;
+    } else if let Some(matches) = matches.subcommand_matches("remove") {
+        let name = matches.value_of("name").unwrap();
+
+        commands::remove(name)?;
     }
 
     return Ok(());

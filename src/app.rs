@@ -7,7 +7,7 @@ pub fn build_app() -> App<'static, 'static> {
     .about(crate_description!())
     .subcommand(
       SubCommand::with_name("add")
-        .about("Register a alias to centoria")
+        .about("add a alias to centoria")
         .arg(
           Arg::with_name("name")
             .help("unique alias/name")
@@ -19,6 +19,16 @@ pub fn build_app() -> App<'static, 'static> {
             .help("command(s) to execute with this alias")
             .required(true)
             .index(2),
+        ),
+    )
+    .subcommand(
+      SubCommand::with_name("remove")
+        .about("remove a alias from centoria")
+        .arg(
+          Arg::with_name("name")
+            .help("name of the alias you want to remove")
+            .required(true)
+            .index(1),
         ),
     );
 }
