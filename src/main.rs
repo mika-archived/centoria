@@ -23,8 +23,9 @@ fn run() -> Result<(), failure::Error> {
     if let Some(matches) = matches.subcommand_matches("add") {
         let name = matches.value_of("name").unwrap();
         let command = matches.value_of("command").unwrap();
+        let condition = matches.value_of("condition");
 
-        commands::add(name, command)?;
+        commands::add(name, command, condition)?;
     } else if let Some(matches) = matches.subcommand_matches("remove") {
         let name = matches.value_of("name").unwrap();
 

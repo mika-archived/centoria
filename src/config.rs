@@ -6,6 +6,7 @@ use std::path::PathBuf;
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Alias {
   pub command: String,
+  pub condition: Option<String>,
 }
 
 fn find_valid_path() -> Result<PathBuf, failure::Error> {

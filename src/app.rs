@@ -19,6 +19,14 @@ pub fn build_app() -> App<'static, 'static> {
             .help("command(s) to execute with this alias")
             .required(true)
             .index(2),
+        )
+        .arg(
+          Arg::with_name("condition")
+            .short("c")
+            .long("condition")
+            .value_name("command")
+            .help("conditional statements for applying this alias")
+            .takes_value(true),
         ),
     )
     .subcommand(
