@@ -18,9 +18,9 @@ pub fn add(name: &str, command: &str) -> Result<(), failure::Error> {
 }
 
 fn check_already_registered(name: &str, cfg: &BTreeMap<String, Alias>) -> bool {
-  match cfg.get(name) {
-    Some(_) => return true,
-    None => return false,
+  return match cfg.get(name) {
+    Some(_) => true,
+    None => false,
   };
 }
 

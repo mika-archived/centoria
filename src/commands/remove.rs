@@ -18,8 +18,8 @@ pub fn remove(name: &str) -> Result<(), failure::Error> {
 }
 
 fn check_alias_registered(name: &str, cfg: &BTreeMap<String, Alias>) -> bool {
-  match cfg.get(name) {
-    Some(_) => return true,
-    None => return false,
+  return match cfg.get(name) {
+    Some(_) => true,
+    None => false,
   };
 }
