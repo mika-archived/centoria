@@ -1,3 +1,5 @@
+#[macro_use]
+extern crate clap;
 extern crate exitfailure;
 extern crate failure;
 
@@ -8,5 +10,7 @@ fn main() -> Result<(), ExitFailure> {
 }
 
 fn run() -> Result<(), failure::Error> {
+    let matches = app::build_app().get_matches();
+
     return Ok(());
 }
