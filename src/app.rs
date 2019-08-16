@@ -39,5 +39,22 @@ pub fn build_app() -> App<'static, 'static> {
             .required(true)
             .index(1),
         ),
+    )
+    .subcommand(
+      SubCommand::with_name("exec")
+        .about("execute alias as proxy of centoria")
+        .arg(
+          Arg::with_name("name")
+            .help("name of the alias to execute")
+            .required(true)
+            .index(1),
+        )
+        .arg(
+          Arg::with_name("extras")
+            .help("extra arguments of original command")
+            .multiple(true)
+            .takes_value(true)
+            .last(true),
+        ),
     );
 }

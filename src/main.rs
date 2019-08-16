@@ -32,6 +32,14 @@ fn run() -> Result<(), failure::Error> {
         let name = matches.value_of("name").unwrap();
 
         commands::remove(name)?;
+    } else if let Some(matches) = matches.subcommand_matches("exec") {
+        let name = matches.value_of("name").unwrap();
+        let extras: Option<Vec<&str>> = match matches.values_of("extras") {
+            Some(value) => Some(value.collect()),
+            None => None
+        };
+
+        commands::exec(name, extras)?;
     }
 
     return Ok(());
