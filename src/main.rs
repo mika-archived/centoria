@@ -36,7 +36,7 @@ fn run() -> Result<(), failure::Error> {
         let name = matches.value_of("name").unwrap();
         let extras: Option<Vec<&str>> = match matches.values_of("extras") {
             Some(value) => Some(value.collect()),
-            None => None
+            None => None,
         };
 
         commands::exec(name, extras)?;
