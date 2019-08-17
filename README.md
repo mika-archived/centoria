@@ -38,7 +38,10 @@ $ cet add grep rg --condition "which rg"
 Centoria find configuration from the following paths:
 
 * `$CENTORIA_CONFIG_PATH`
-* `$XDG_CONFIG_HOME/centoria/centoria.toml`
+* System configuration directory
+  * Linux: `$XDG_CONFIG_HOME/centoria/centoria.toml` or `$HOME/.config/centoria/centoria.toml`
+  * macOS: `$HOME/Library/Preferences/centoria/centoria.toml`
+  * Windows: `$APPDATA/centoria/centoria.toml`
 * `$HOME/.centoria.toml`
 
 example `centoria.toml` :

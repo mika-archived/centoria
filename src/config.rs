@@ -10,6 +10,7 @@ pub struct Alias {
 }
 
 fn find_valid_path() -> Result<PathBuf, failure::Error> {
+  // $CENTORIA_CONFIG_PATH
   if let Ok(path) = env::var("CENTORIA_CONFIG_PATH") {
     let path = PathBuf::from(&path);
 
@@ -18,19 +19,20 @@ fn find_valid_path() -> Result<PathBuf, failure::Error> {
     }
   }
 
-  if let Ok(xdg_home) = env::var("XDG_CONFIG_HOME") {
-    let mut path = PathBuf::from(&xdg_home);
-    path.push("centoria");
-    path.push("centoria.toml");
+  // $SYSTEM_CONFIGURATION_DIRECTORY/centoria/centoria.toml
+  if let Some(path) = dirs::config_dir() {
+    let path: PathBuf = [&path.to_str().unwrap(), "centoria", "centoria.toml"]
+      .iter()
+      .collect();
 
     if path.exists() {
       return Ok(path);
     }
   }
 
-  if let Some(home) = dirs::home_dir() {
-    let mut path = PathBuf::from(&home);
-    path.push(".centoria.toml");
+  // $HOME/.centoria.toml
+  if let Some(path) = dirs::home_dir() {
+    let path: PathBuf = [&path.to_str().unwrap(), "centoria.toml"].iter().collect();
 
     return Ok(path);
   }
