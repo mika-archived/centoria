@@ -10,6 +10,7 @@ extern crate serde_derive;
 mod app;
 mod commands;
 mod config;
+mod function;
 
 use exitfailure::ExitFailure;
 
@@ -23,23 +24,11 @@ fn run() -> Result<(), failure::Error> {
     if let Some(_) = matches.subcommand_matches("init") {
         commands::init()?;
     } else if let Some(matches) = matches.subcommand_matches("add") {
-        let name = matches.value_of("name").unwrap();
-        let command = matches.value_of("command").unwrap();
-        let condition = matches.value_of("condition");
-
-        commands::add(name, command, condition)?;
+        commands::add(matches)?;
     } else if let Some(matches) = matches.subcommand_matches("remove") {
-        let name = matches.value_of("name").unwrap();
-
-        commands::remove(name)?;
+        commands::remove(matches)?;
     } else if let Some(matches) = matches.subcommand_matches("exec") {
-        let name = matches.value_of("name").unwrap();
-        let extras: Option<Vec<&str>> = match matches.values_of("extras") {
-            Some(value) => Some(value.collect()),
-            None => None,
-        };
-
-        commands::exec(name, extras)?;
+        commands::exec(matches)?;
     }
 
     return Ok(());

@@ -1,37 +1,16 @@
-use std::collections::BTreeMap;
-use std::iter::FromIterator;
+use clap::ArgMatches;
 
-use crate::config::{self, Alias};
+use crate::config::Config;
+use crate::function::Function;
 
-pub fn add(name: &str, command: &str, condition: Option<&str>) -> Result<(), failure::Error> {
-    let cfg = config::load()?;
-    if check_already_registered(name, &cfg) {
-        let msg = failure::err_msg(format!("alias `{}` is already registered", name));
-        return Err(msg);
-    }
+pub fn add(args: &ArgMatches) -> Result<(), failure::Error> {
+    let mut cfg = Config::load()?;
+    let name = args.value_of("name").unwrap();
+    let command = args.value_of("command").unwrap();
+    let condition = args.value_of("condition");
 
-    let mut cfg: BTreeMap<String, Alias> = BTreeMap::from_iter(cfg.into_iter());
-    cfg.insert(name.to_string(), create_alias(command, condition));
-    config::save(cfg)?;
+    cfg.add(&name, Function::new(&command, condition, None))?;
+    cfg.save()?;
 
     return Ok(());
-}
-
-fn check_already_registered(name: &str, cfg: &BTreeMap<String, Alias>) -> bool {
-    return match cfg.get(name) {
-        Some(_) => true,
-        None => false,
-    };
-}
-
-fn create_alias(command: &str, condition: Option<&str>) -> Alias {
-    let condition = match condition {
-        Some(value) => Some(value.to_string()),
-        None => None,
-    };
-
-    return Alias {
-        command: command.to_string(),
-        condition,
-    };
 }
