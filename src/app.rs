@@ -8,16 +8,16 @@ pub fn build_app() -> App<'static, 'static> {
         .subcommand(SubCommand::with_name("init").about("Initialize centoria for shell"))
         .subcommand(
             SubCommand::with_name("add")
-                .about("add a alias to centoria")
+                .about("add a function to centoria")
                 .arg(
                     Arg::with_name("name")
-                        .help("unique alias/name")
+                        .help("unique function name")
                         .required(true)
                         .index(1),
                 )
                 .arg(
                     Arg::with_name("command")
-                        .help("command(s) to execute with this alias")
+                        .help("command(s) to execute with this function")
                         .required(true)
                         .index(2),
                 )
@@ -26,26 +26,26 @@ pub fn build_app() -> App<'static, 'static> {
                         .short("c")
                         .long("condition")
                         .value_name("command")
-                        .help("conditional statements for applying this alias")
+                        .help("conditional statements for applying this function")
                         .takes_value(true),
                 ),
         )
         .subcommand(
             SubCommand::with_name("remove")
-                .about("remove a alias from centoria")
+                .about("remove a function from centoria")
                 .arg(
                     Arg::with_name("name")
-                        .help("name of the alias you want to remove")
+                        .help("name of the function you want to remove")
                         .required(true)
                         .index(1),
                 ),
         )
         .subcommand(
             SubCommand::with_name("exec")
-                .about("execute alias as proxy of centoria")
+                .about("execute function as proxy of centoria")
                 .arg(
                     Arg::with_name("name")
-                        .help("name of the alias to execute")
+                        .help("name of the function to execute")
                         .required(true)
                         .index(1),
                 )
