@@ -1,6 +1,6 @@
 # Centoria
 
-Centoria - alias manager for macOS and Linux.
+Centoria - function manager for macOS and Linux.
 
 ## Usage
 
@@ -14,19 +14,19 @@ $ source $(cet init)
 $ source (cet init | psub)
 ```
 
-Add a alias:
+Add a function:
 
 ```bash
 $ cet add grep rg
 ```
 
-Remove a alias:
+Remove a function:
 
 ```bash
 $ cet remove grep
 ```
 
-Centoria supports conditional alias:
+Centoria supports conditional function:
 
 ```bash
 # if `which rg` returns success code (exit 0), use `rg` instead of `grep`
