@@ -28,6 +28,14 @@ pub fn build_app() -> App<'static, 'static> {
                         .value_name("command")
                         .help("conditional statements for applying this function")
                         .takes_value(true),
+                )
+                .arg(
+                    Arg::with_name("shell")
+                        .short("s")
+                        .long("shell")
+                        .help("shell program that executes the function")
+                        .default_value("sh")
+                        .takes_value(true),
                 ),
         )
         .subcommand(

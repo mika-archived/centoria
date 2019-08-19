@@ -21,7 +21,7 @@ impl Function {
 
     pub fn can_execute(&self) -> bool {
         if self.shell() != "sh" {
-            match Command::new(self.shell()).arg("--version").status() {
+            match Command::new(self.shell()).arg("--version").output() {
                 Ok(_) => {}
                 Err(_) => return false,
             }
