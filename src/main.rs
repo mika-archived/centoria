@@ -23,18 +23,27 @@ fn main() -> Result<(), ExitFailure> {
 fn run() -> Result<(), failure::Error> {
     let matches = app::build_app().get_matches();
 
-    if let Some(_) = matches.subcommand_matches("init") {
-        commands::init()?;
-    } else if let Some(matches) = matches.subcommand_matches("add") {
-        commands::add(matches)?;
-    } else if let Some(matches) = matches.subcommand_matches("remove") {
-        commands::remove(matches)?;
-    } else if let Some(matches) = matches.subcommand_matches("exec") {
-        let status = commands::exec(matches)?;
-        if let Some(code) = status.code() {
-            exit(code);
+    match matches.subcommand() {
+        ("init", Some(_)) => {
+            commands::init()?;
         }
-    }
+        ("add", Some(matches)) => {
+            commands::add(matches)?;
+        }
+        ("remove", Some(matches)) => {
+            commands::remove(matches)?;
+        }
+        ("exec", Some(matches)) => {
+            let status = commands::exec(matches)?;
+            if let Some(code) = status.code() {
+                exit(code);
+            }
+        }
+        _ => {
+            let msg = "subcommand is required";
+            return Err(failure::err_msg(msg));
+        }
+    };
 
     return Ok(());
 }
