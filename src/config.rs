@@ -61,7 +61,7 @@ impl Config {
 
         // $HOME/.centoria.toml
         if let Some(path) = dirs::home_dir() {
-            let path: PathBuf = [&path.to_str().unwrap(), "centoria.toml"].iter().collect();
+            let path: PathBuf = [&path.to_str().unwrap(), ".centoria.toml"].iter().collect();
 
             return Ok(path);
         }
