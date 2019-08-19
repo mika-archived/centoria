@@ -1,8 +1,10 @@
+use std::process::ExitStatus;
+
 use clap::ArgMatches;
 
 use crate::config::Config;
 
-pub fn exec(args: &ArgMatches) -> Result<(), failure::Error> {
+pub fn exec(args: &ArgMatches) -> Result<ExitStatus, failure::Error> {
     let cfg = Config::load()?;
     let name = args.value_of("name").unwrap();
     let extra = args.values_of("extra").map(|w| w.collect());
@@ -20,6 +22,5 @@ pub fn exec(args: &ArgMatches) -> Result<(), failure::Error> {
         return Err(failure::err_msg(msg));
     }
 
-    function.execute(extra)?;
-    return Ok(());
+    return Ok(function.execute(extra)?);
 }

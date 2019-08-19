@@ -12,6 +12,8 @@ mod commands;
 mod config;
 mod function;
 
+use std::process::exit;
+
 use exitfailure::ExitFailure;
 
 fn main() -> Result<(), ExitFailure> {
@@ -28,7 +30,10 @@ fn run() -> Result<(), failure::Error> {
     } else if let Some(matches) = matches.subcommand_matches("remove") {
         commands::remove(matches)?;
     } else if let Some(matches) = matches.subcommand_matches("exec") {
-        commands::exec(matches)?;
+        let status = commands::exec(matches)?;
+        if let Some(code) = status.code() {
+            exit(code);
+        }
     }
 
     return Ok(());

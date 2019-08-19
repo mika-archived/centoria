@@ -1,4 +1,4 @@
-use std::process::Command;
+use std::process::{Command, ExitStatus};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Function {
@@ -38,7 +38,7 @@ impl Function {
         return true;
     }
 
-    pub fn execute(&self, extra: Option<Vec<&str>>) -> Result<(), failure::Error> {
+    pub fn execute(&self, extra: Option<Vec<&str>>) -> Result<ExitStatus, failure::Error> {
         let mut execute = self.command.to_string();
         if let Some(extra) = extra {
             execute.push_str(&format!(" {}", extra.join(" ")));
@@ -46,7 +46,7 @@ impl Function {
 
         #[rustfmt::skip]
         match Command::new(self.shell()).args(&["-c", &execute.trim()]).status() {
-            Ok(_) => return Ok(()),
+            Ok(status) => return Ok(status),
             Err(e) => {
                 let msg = failure::err_msg(format!("function failed: {}", e));
                 return Err(msg);
