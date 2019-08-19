@@ -4,17 +4,25 @@ use std::process::{Command, ExitStatus};
 pub struct Function {
     command: String,
     condition: Option<String>,
+    description: Option<String>,
     shell: Option<String>,
 }
 
 impl Function {
-    pub fn new(command: &str, condition: Option<&str>, shell: Option<&str>) -> Function {
+    pub fn new(
+        command: &str,
+        condition: Option<&str>,
+        description: Option<&str>,
+        shell: Option<&str>,
+    ) -> Function {
         let condition = condition.map(|s| s.to_string());
+        let description = description.map(|s| s.to_string());
         let shell = shell.map(|s| s.to_string());
 
         return Function {
             command: command.to_string(),
             condition,
+            description,
             shell,
         };
     }

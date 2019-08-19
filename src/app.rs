@@ -30,6 +30,13 @@ pub fn build_app() -> App<'static, 'static> {
                         .takes_value(true),
                 )
                 .arg(
+                    Arg::with_name("description")
+                        .short("d")
+                        .long("description")
+                        .help("description of this function")
+                        .takes_value(true),
+                )
+                .arg(
                     Arg::with_name("shell")
                         .short("s")
                         .long("shell")
