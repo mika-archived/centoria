@@ -3,10 +3,11 @@ use std::env;
 use std::fs;
 use std::path::PathBuf;
 
-use crate::function::Function;
+use crate::executors::Executor;
 
 pub struct Config {
-    entries: BTreeMap<String, Function>,
+    // value must implement Executor trait
+    entries: BTreeMap<String, Box<dyn Executor>>,
 }
 
 impl Config {
@@ -27,7 +28,7 @@ impl Config {
             }
         };
 
-        let entries: BTreeMap<String, Function> = match toml::from_str(&toml_str) {
+        let entries: BTreeMap<String, Box<dyn Executor>> = match toml::from_str(&toml_str) {
             Ok(value) => value,
             Err(e) => {
                 let msg = format!("could not parse configuration file because {}", e);
@@ -69,13 +70,13 @@ impl Config {
     }
 
     // instance methods
-    pub fn add(&mut self, name: &str, function: Function) -> Result<(), failure::Error> {
+    pub fn add(&mut self, name: &str, executor: Box<dyn Executor>) -> Result<(), failure::Error> {
         if self.exists(name) {
             let msg = format!("function name `{}` is already exists", name);
             return Err(failure::err_msg(msg));
         }
 
-        self.entries.insert(name.to_string(), function);
+        self.entries.insert(name.to_string(), executor);
         return Ok(());
     }
 
@@ -89,7 +90,7 @@ impl Config {
         return Ok(());
     }
 
-    pub fn get(&self, name: &str) -> Option<&Function> {
+    pub fn get(&self, name: &str) -> Option<&Box<dyn Executor>> {
         return self.entries.get(name);
     }
 

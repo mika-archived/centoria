@@ -3,6 +3,7 @@ extern crate clap;
 extern crate dirs;
 extern crate exitfailure;
 extern crate failure;
+extern crate regex;
 extern crate serde;
 #[macro_use]
 extern crate serde_derive;
@@ -10,7 +11,7 @@ extern crate serde_derive;
 mod app;
 mod commands;
 mod config;
-mod function;
+mod executors;
 
 use std::process::exit;
 
