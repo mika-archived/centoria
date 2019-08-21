@@ -50,7 +50,7 @@ example `centoria.toml` :
 
 ```toml
 [search]
-runas = 'alias
+runas = 'alias'
 command = 'rg'
 condition = 'which rg'
 ```
