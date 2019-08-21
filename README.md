@@ -44,10 +44,13 @@ Centoria find configuration from the following paths:
   * Windows: `$APPDATA/centoria/centoria.toml`
 * `$HOME/.centoria.toml`
 
+If you add a new function from command-line, Centoria creates a new file in `$HOME/.centoria.toml`.
+
 example `centoria.toml` :
 
 ```toml
-[grep]
-command = "rg"
-condition = "which rg"
+[search]
+runas = 'alias
+command = 'rg'
+condition = 'which rg'
 ```
