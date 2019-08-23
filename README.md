@@ -46,8 +46,6 @@ Example:
 $ cet add search "rg {0..}" --condition "which rg"
 # "show-err-logs nginx" expands as "tail -f /var/log/nginx/error.log"
 $ cet add show-err-logs "tail -f /var/log/{0}/error.log"
-# also use conditional statements
-$ cet add show-err-logs "tail -f /var/log/{0}/error.log" --condition "test -d /var/log/{0}"
 ```
 
 
