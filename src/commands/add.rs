@@ -22,7 +22,7 @@ fn construct(args: &ArgMatches) -> Box<dyn Executor> {
 
     let regex = Regex::new(r"\{\d+(\.\.(\d+)?)?\}").unwrap();
     if regex.is_match(&command) {
-        return Box::new(Function::new(&command, condition, description, None, shell));
+        return Box::new(Function::new(&command, condition, description, shell));
     } else {
         return Box::new(Alias::new(&command, condition, description, shell));
     }

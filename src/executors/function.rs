@@ -19,9 +19,6 @@ pub struct Function {
     description: Option<String>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    params: Option<Vec<String>>,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
     shell: Option<String>,
 }
 
@@ -30,19 +27,16 @@ impl Function {
         command: &str,
         condition: Option<&str>,
         description: Option<&str>,
-        params: Option<Vec<&str>>,
         shell: Option<&str>,
     ) -> Function {
         let condition = condition.map(|s| s.to_owned());
         let description = description.map(|s| s.to_owned());
-        let params = params.map(|s| s.into_iter().map(|w| w.to_owned()).collect());
         let shell = shell.map(|s| s.to_owned());
 
         return Function {
             command: command.to_owned(),
             condition,
             description,
-            params,
             shell,
         };
     }
