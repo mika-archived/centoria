@@ -1,7 +1,8 @@
 use clap::ArgMatches;
+use regex::Regex;
 
 use crate::config::Config;
-use crate::executors::{Alias, Executor};
+use crate::executors::{Alias, Executor, Function};
 
 pub fn add(args: &ArgMatches) -> Result<(), failure::Error> {
     let mut cfg = Config::load()?;
@@ -19,5 +20,10 @@ fn construct(args: &ArgMatches) -> Box<dyn Executor> {
     let description = args.value_of("description");
     let shell = args.value_of("shell");
 
-    return Box::new(Alias::new(&command, condition, description, shell));
+    let regex = Regex::new(r"\{\d+(\.\.(\d+)?)?\}").unwrap();
+    if regex.is_match(&command) {
+        return Box::new(Function::new(&command, condition, description, None, shell));
+    } else {
+        return Box::new(Alias::new(&command, condition, description, shell));
+    }
 }

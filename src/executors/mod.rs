@@ -3,8 +3,10 @@ use std::process::ExitStatus;
 use clap::ArgMatches;
 
 mod alias;
+mod function;
 
 pub use alias::Alias;
+pub use function::Function;
 
 #[typetag::serde(tag = "runas")]
 pub trait Executor {
