@@ -36,9 +36,13 @@ $ cet add search rg --condition "which rg"
 If you want to pass the arguments anywhere, you can specify them using `{INDEXER}` as placeholder.  
 Example:
 
-* You want to 1st arguments, please use `{0}` for placeholder.
-* You want to 1st, 2nd and 3rd arguments, please use `{0..3}` for placeholder.
-* You want to 2nd and later arguments, please use `{2..}` for placeholder.
+* You want the 1st arguments, please use `{0}` for placeholder.
+* You want the 1st, 2nd and 3rd arguments, please use `{0..3}` for placeholder.
+* You want the 2nd and later arguments, please use `{2..}` for placeholder.
+* You want the 2nd and later arguments, but they are optional, please use `{2..?}` for placeholder.
+  * `?` acts as optional parameter
+    * Single Optional : `{0?}`
+    * Multiple Optional : `{0..?}`
 
 
 ```bash
