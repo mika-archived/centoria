@@ -12,7 +12,7 @@ mod app;
 mod commands;
 mod config;
 mod executors;
-mod format;
+mod formatter;
 
 use std::process::exit;
 

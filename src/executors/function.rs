@@ -3,7 +3,7 @@ use std::process::{Command, ExitStatus};
 use clap::ArgMatches;
 
 use crate::executors::Executor;
-use crate::format;
+use crate::formatter;
 
 /**
  * function works as shell functions
@@ -83,7 +83,7 @@ impl Executor for Function {
         };
 
         // building
-        let execute = match format::format_array(&self.command.to_string(), "", &extra) {
+        let execute = match formatter::format_array(&self.command.to_string(), "", &extra) {
             Ok(value) => value,
             Err(e) => return Err(e),
         };
