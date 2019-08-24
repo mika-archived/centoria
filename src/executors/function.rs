@@ -71,21 +71,17 @@ impl Executor for Function {
     }
 
     fn execute(&self, args: &ArgMatches) -> Result<ExitStatus, failure::Error> {
-        let extra: Option<Vec<&str>> = args.values_of("extra").map(|w| w.collect());
-
-        // checks
-        let extra = match extra {
-            Some(value) => value,
-            None => {
-                let msg = failure::err_msg("this function requires extra arguments");
-                return Err(msg);
-            }
-        };
+        let extra: Vec<&str> = args
+            .values_of("extra")
+            .map_or_else(|| vec![], |w| w.collect());
 
         // building
         let execute = match formatter::format_array(&self.command.to_string(), "", &extra) {
             Ok(value) => value,
-            Err(e) => return Err(e),
+            Err(_) => {
+                let msg = "required parameter(s) is missing, please use `show` subcommand for checking usages";
+                return Err(failure::err_msg(msg));
+            }
         };
 
         #[rustfmt::skip]
