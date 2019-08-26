@@ -4,7 +4,6 @@ use clap::ArgMatches;
 
 use crate::argparse::ArgParser;
 use crate::executors::Executor;
-use crate::formatter;
 
 /**
  * function works as shell functions
