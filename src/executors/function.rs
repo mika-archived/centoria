@@ -2,6 +2,7 @@ use std::process::{Command, ExitStatus};
 
 use clap::ArgMatches;
 
+use crate::argparse::ArgParser;
 use crate::executors::Executor;
 use crate::formatter;
 
@@ -20,6 +21,9 @@ pub struct Function {
 
     #[serde(skip_serializing_if = "Option::is_none")]
     shell: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    descriptions: Option<Vec<String>>, // description for arguments
 }
 
 impl Function {
@@ -76,10 +80,13 @@ impl Executor for Function {
             .map_or_else(|| vec![], |w| w.collect());
 
         // building
-        let execute = match formatter::format_array(&self.command.to_string(), "", &extra) {
+        let mut parser = ArgParser::new(&self.command, None);
+        parser.parse()?;
+
+        let execute = match parser.fill(extra) {
             Ok(value) => value,
             Err(_) => {
-                let msg = "required parameter(s) is missing, please use `show` subcommand for checking usages";
+                let msg = "required parameter(s) is missing, please use `show` subcommand for checking parameters";
                 return Err(failure::err_msg(msg));
             }
         };

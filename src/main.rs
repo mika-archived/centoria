@@ -9,10 +9,10 @@ extern crate serde;
 extern crate serde_derive;
 
 mod app;
+mod argparse;
 mod commands;
 mod config;
 mod executors;
-mod formatter;
 
 use std::process::exit;
 
