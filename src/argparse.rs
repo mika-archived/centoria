@@ -9,6 +9,7 @@ pub struct ArgParser {
     string: String,
 }
 
+#[derive(Debug)]
 struct Argument {
     capture_str: String,
     description: Option<String>,
@@ -69,7 +70,7 @@ impl ArgParser {
             capture_str: captures.get(0).unwrap().as_str().to_owned(),
             description,
             is_required: !optional,
-            range: (index..index),
+            range: (index..(index + 1)),
         });
     }
 
@@ -119,7 +120,10 @@ impl ArgParser {
                     .iter()
                     .map(|s| s.to_string())
                     .collect::<Vec<String>>(),
-                None => return Err(failure::err_msg("index out of bounds or invalid access")),
+                None => match argument.range.end == std::usize::MAX {
+                    true => vec![],
+                    false => return Err(failure::err_msg("index out of bounds or invalid access")),
+                },
             };
 
             if argument.is_required && params.len() == 0 {
