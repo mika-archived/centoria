@@ -77,5 +77,9 @@ condition = 'which rg'
 [show-err-logs]
 runas = 'function'
 command = 'tail -f /var/log/{0}/error.log'
+description = 'show error logs'
+descriptions = [
+  'application name' # description of argument {0}
+]
 ```
 
