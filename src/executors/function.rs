@@ -134,10 +134,11 @@ impl Executor for Function {
 
         println!(
             "\
-Usage     : cet exec {name} -- <EXTRA ARGS>
-Execute   : {command}
-Shell     : {shell}
-Parameters: 
+Usage (Cet)    : cet exec {name} -- <EXTRA ARGS>
+Usage (Direct) : {name} <EXTRA ARGS>
+Execute        : {command}
+Shell          : {shell}
+Parameters     : 
 {parameters}
 
 {description}\
