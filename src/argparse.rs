@@ -10,7 +10,7 @@ pub struct ArgParser {
 }
 
 #[derive(Debug)]
-struct Argument {
+pub struct Argument {
     capture_str: String,
     description: Option<String>,
     is_required: bool,
@@ -28,6 +28,12 @@ impl ArgParser {
         };
     }
 
+    // accessors
+    pub fn arguments(&mut self) -> Option<&Vec<Argument>> {
+        return self.arguments.as_ref();
+    }
+
+    // methods
     pub fn parse(&mut self) -> Result<(), failure::Error> {
         // currently supports {1}, {1?}, {1..}, {1..2}, {1..?}
         let variable = Regex::new(
@@ -134,5 +140,21 @@ impl ArgParser {
         }
 
         return Ok(replaced.to_owned());
+    }
+}
+
+impl Argument {
+    pub fn description(&self) -> &str {
+        return match &self.description {
+            Some(value) => value,
+            None => "No description provided",
+        };
+    }
+
+    pub fn attribute(&self) -> &str {
+        return match &self.is_required {
+            true  => "required",
+            false => "optional",
+        };
     }
 }

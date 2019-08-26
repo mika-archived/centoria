@@ -1,6 +1,7 @@
 use std::process::{Command, ExitStatus};
 
 use clap::ArgMatches;
+use term_size::dimensions;
 
 use crate::argparse::ArgParser;
 use crate::executors::Executor;
@@ -102,6 +103,55 @@ impl Executor for Function {
     }
 
     fn display(&self, args: &ArgMatches) -> Result<(), failure::Error> {
+        let (width, _) = dimensions().unwrap();
+        let descriptions = match &self.descriptions {
+            Some(values) => Some(values.iter().map(|s| s.as_str()).collect()),
+            None => None,
+        };
+        let mut parser = ArgParser::new(&self.command, descriptions);
+        parser.parse()?;
+
+        let name = args.value_of("name").unwrap();
+        let description = match &self.description {
+            Some(value) => value,
+            None => "No description provided",
+        };
+        let parameters = match parser.arguments() {
+            Some(values) => values
+                .iter()
+                .enumerate()
+                .map(|(i, w)| {
+                    format!(
+                        "{index} ({opt}): {description}",
+                        index = i,
+                        opt = w.attribute(),
+                        description = w.description()
+                    )
+                })
+                .collect::<Vec<String>>(),
+            None => vec!["No description provided".to_owned()],
+        };
+
+        println!(
+            "\
+Usage     : cet exec {name} -- <EXTRA ARGS>
+Execute   : {command}
+Shell     : {shell}
+Parameters: 
+{parameters}
+
+{description}\
+        ",
+            name = name,
+            parameters = parameters
+                .iter()
+                .map(|w| format!("    {}", w))
+                .collect::<Vec<String>>()
+                .join("\n"),
+            description = description,
+            command = self.command,
+            shell = self.shell(),
+        );
         return Ok(());
     }
 }
