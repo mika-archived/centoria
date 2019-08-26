@@ -116,7 +116,7 @@ impl ArgParser {
 
         let mut replaced = self.string.to_owned();
         for argument in arguments {
-            let actual = if argument.range.end == std::usize::MAX {
+            let actual = if argument.is_optional_range() {
                 variables.len()
             } else {
                 argument.range.end
@@ -126,7 +126,7 @@ impl ArgParser {
                     .iter()
                     .map(|s| s.to_string())
                     .collect::<Vec<String>>(),
-                None => match argument.range.end == std::usize::MAX {
+                None => match argument.is_optional_range() {
                     true => vec![],
                     false => return Err(failure::err_msg("index out of bounds or invalid access")),
                 },
@@ -147,14 +147,21 @@ impl Argument {
     pub fn description(&self) -> &str {
         return match &self.description {
             Some(value) => value,
-            None => "No description provided",
+            None => match self.is_optional_range() {
+                true => "Extra arguments that passing to the original command",
+                false => "No description provided",
+            },
         };
     }
 
     pub fn attribute(&self) -> &str {
         return match &self.is_required {
-            true  => "required",
+            true => "required",
             false => "optional",
         };
+    }
+
+    fn is_optional_range(&self) -> bool {
+        return !self.is_required && self.range.end == std::usize::MAX;
     }
 }
