@@ -40,6 +40,7 @@ impl Function {
             command: command.to_owned(),
             condition,
             description,
+            descriptions: None,
             shell,
         };
     }
@@ -98,5 +99,9 @@ impl Executor for Function {
                 return Err(msg);
             }
         };
+    }
+
+    fn display(&self, args: &ArgMatches) -> Result<(), failure::Error> {
+        return Ok(());
     }
 }

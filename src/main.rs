@@ -41,6 +41,9 @@ fn run() -> Result<(), failure::Error> {
                 exit(code);
             }
         }
+        ("show", Some(matches)) => {
+            commands::show(matches)?;
+        }
         _ => {
             let msg = "subcommand is required";
             return Err(failure::err_msg(msg));

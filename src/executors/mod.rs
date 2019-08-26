@@ -12,4 +12,5 @@ pub use function::Function;
 pub trait Executor {
     fn can_execute(&self) -> bool;
     fn execute(&self, args: &ArgMatches) -> Result<ExitStatus, failure::Error>;
+    fn display(&self, args: &ArgMatches) -> Result<(), failure::Error>;
 }

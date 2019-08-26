@@ -87,4 +87,8 @@ impl Executor for Alias {
             }
         };
     }
+
+    fn display(&self, _: &ArgMatches) -> Result<(), failure::Error> {
+        return Ok(());
+    }
 }

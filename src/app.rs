@@ -71,5 +71,15 @@ pub fn build_app() -> App<'static, 'static> {
                         .takes_value(true)
                         .last(true),
                 ),
+        )
+        .subcommand(
+            SubCommand::with_name("show")
+                .about("show function details")
+                .arg(
+                    Arg::with_name("name")
+                        .help("name of the function to display")
+                        .required(true)
+                        .index(1),
+                ),
         );
 }
