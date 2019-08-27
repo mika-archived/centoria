@@ -136,10 +136,10 @@ Usage (Cet)    : cet exec {name} -- <EXTRA ARGS>
 Usage (Direct) : {name} <EXTRA ARGS>
 Execute        : {command}
 Shell          : {shell}
-Parameters     : 
+Parameters     :
 {parameters}
 
-{description}\
+{description}
         ",
             name = name,
             parameters = parameters

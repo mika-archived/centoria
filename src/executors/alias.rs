@@ -88,7 +88,28 @@ impl Executor for Alias {
         };
     }
 
-    fn display(&self, _: &ArgMatches) -> Result<(), failure::Error> {
+    fn display(&self, args: &ArgMatches) -> Result<(), failure::Error> {
+        let name = args.value_of("name").unwrap();
+        let description = match &self.description {
+            Some(value) => value,
+            None => "No description provided",
+        };
+
+        println!(
+            "\
+Usage (Cet)    : cet exec {name} -- <EXTRA ARGS>
+Usage (Direct) : {name} <EXTRA ARGS>
+Execute        : {command}
+Shell          : {shell}
+
+{description}
+        ",
+            name = name,
+            description = description,
+            command = self.command,
+            shell = self.shell(),
+        );
+
         return Ok(());
     }
 }
