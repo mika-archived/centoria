@@ -112,4 +112,8 @@ Shell          : {shell}
 
         return Ok(());
     }
+
+    fn export_as(&self, name: &str) -> Result<String, failure::Error> {
+        return Ok(format!("alias {name}='cet exec {name} -- '", name = name.to_owned()));
+    }
 }

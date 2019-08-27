@@ -13,4 +13,5 @@ pub trait Executor {
     fn can_execute(&self) -> bool;
     fn execute(&self, args: &ArgMatches) -> Result<ExitStatus, failure::Error>;
     fn display(&self, args: &ArgMatches) -> Result<(), failure::Error>;
+    fn export_as(&self, name: &str) -> Result<String, failure::Error>;
 }

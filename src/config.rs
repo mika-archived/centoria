@@ -101,6 +101,10 @@ impl Config {
         };
     }
 
+    pub fn keys(&self) -> Vec<String> {
+        return self.entries.keys().cloned().collect();
+    }
+
     pub fn save(&mut self) -> Result<(), failure::Error> {
         let path = Config::find_valid_path()?;
         let toml_str = match toml::to_string_pretty(&self.entries) {
