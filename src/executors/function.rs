@@ -1,7 +1,6 @@
 use std::process::{Command, ExitStatus};
 
 use clap::ArgMatches;
-use term_size::dimensions;
 
 use crate::argparse::ArgParser;
 use crate::executors::Executor;
@@ -103,7 +102,6 @@ impl Executor for Function {
     }
 
     fn display(&self, args: &ArgMatches) -> Result<(), failure::Error> {
-        let (width, _) = dimensions().unwrap();
         let descriptions = match &self.descriptions {
             Some(values) => Some(values.iter().map(|s| s.as_str()).collect()),
             None => None,
