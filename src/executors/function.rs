@@ -8,7 +8,7 @@ use crate::executors::Executor;
 /**
  * function works as shell functions
  */
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct Function {
     command: String,
 
@@ -155,6 +155,9 @@ Parameters     :
     }
 
     fn export_as(&self, name: &str) -> Result<String, failure::Error> {
-        return Ok(format!("alias {name}='cet exec {name} -- '", name = name.to_owned()));
+        return Ok(format!(
+            "alias {name}='cet exec {name} -- '",
+            name = name.to_owned()
+        ));
     }
 }

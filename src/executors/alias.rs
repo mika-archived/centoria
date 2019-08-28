@@ -7,7 +7,7 @@ use crate::executors::Executor;
 /**
  * alias works as shell aliases
  */
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct Alias {
     command: String,
 
@@ -114,6 +114,9 @@ Shell          : {shell}
     }
 
     fn export_as(&self, name: &str) -> Result<String, failure::Error> {
-        return Ok(format!("alias {name}='cet exec {name} -- '", name = name.to_owned()));
+        return Ok(format!(
+            "alias {name}='cet exec {name} -- '",
+            name = name.to_owned()
+        ));
     }
 }
