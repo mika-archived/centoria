@@ -194,7 +194,48 @@ impl Executor for SubCommand {
         return self.run_command(&execute);
     }
 
-    fn display(&self, _: &ArgMatches) -> Result<(), failure::Error> {
+    fn display(&self, args: &ArgMatches) -> Result<(), failure::Error> {
+        let name = args.value_of("name").unwrap();
+        let description = match &self.description {
+            Some(value) => value,
+            None => "No description provided",
+        };
+
+        // let length = self.subcommands.iter().max_by_key(|x| x.0.len()).unwrap();
+        let subcommands = self
+            .subcommands
+            .iter()
+            .map(|(key, value)| {
+                let description = match &value.description {
+                    Some(value) => value,
+                    None => "No description provided",
+                };
+                format!("{} : {}", key, description)
+            })
+            .collect::<Vec<String>>();
+
+        println!(
+            "\
+Usage (Cet)    : cet exec {name} -- <EXTRA ARGS>
+Usage (Direct) : {name} <EXTRA ARGS>
+Wrapped        : {command}
+Shell          : {shell}
+
+{description}
+
+SubCommands (show details of subcommand, pass `-s <name>`):
+{subcommands}
+        ",
+            name = name,
+            description = description,
+            command = self.command,
+            shell = self.shell(),
+            subcommands = subcommands
+                .iter()
+                .map(|w| format!("    {}", w))
+                .collect::<Vec<String>>()
+                .join("\n")
+        );
         return Ok(());
     }
 
