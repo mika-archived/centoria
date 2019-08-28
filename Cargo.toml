@@ -16,6 +16,7 @@ path = "src/main.rs"
 [dependencies]
 clap = "2"
 dirs = "2.0"
+downcast-rs = "1.0"
 exitfailure = "0.5.1"
 failure = "0.1.5"
 regex = "1"

@@ -3,7 +3,7 @@ use std::env;
 use std::fs;
 use std::path::PathBuf;
 
-use crate::executors::Executor;
+use crate::executors::{Executor, SubCommand};
 
 pub struct Config {
     // value must implement Executor trait
@@ -71,8 +71,12 @@ impl Config {
 
     // instance methods
     pub fn add(&mut self, name: &str, executor: Box<dyn Executor>) -> Result<(), failure::Error> {
+        if executor.is::<SubCommand>() {
+            return self.add_child(name, executor.downcast::<SubCommand>().ok().unwrap());
+        }
+
         if self.exists(name) {
-            let msg = format!("function name `{}` is already exists", name);
+            let msg = format!("function `{}` is already exists", name);
             return Err(failure::err_msg(msg));
         }
 
@@ -80,9 +84,21 @@ impl Config {
         return Ok(());
     }
 
+    fn add_child(&mut self, name: &str, executor: Box<SubCommand>) -> Result<(), failure::Error> {
+        if self.exists(name) {
+            let existing: &mut Box<dyn Executor> = self.entries.get_mut(name).unwrap();
+            let existing: &mut SubCommand = existing.downcast_mut::<SubCommand>().unwrap();
+            existing.add(*executor)?; // unboxing
+        } else {
+            self.entries.insert(name.to_owned(), executor);
+        }
+
+        return Ok(());
+    }
+
     pub fn remove(&mut self, name: &str) -> Result<(), failure::Error> {
         if !self.exists(name) {
-            let msg = format!("function name `{}` is not exists", name);
+            let msg = format!("function `{}` is not exists", name);
             return Err(failure::err_msg(msg));
         }
 

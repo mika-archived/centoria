@@ -43,6 +43,12 @@ pub fn build_app() -> App<'static, 'static> {
                         .help("shell program that executes the function")
                         .default_value("sh")
                         .takes_value(true),
+                )
+                .arg(
+                    Arg::with_name("program")
+                        .short("p")
+                        .long("program")
+                        .takes_value(true),
                 ),
         )
         .subcommand(

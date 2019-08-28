@@ -33,6 +33,13 @@ impl ArgParser {
         return self.arguments.as_ref();
     }
 
+    pub fn has_arguments(&self) -> Result<bool, failure::Error> {
+        return match &self.arguments {
+            Some(value) => Ok(value.len() > 0),
+            None => Err(failure::err_msg("could not found parsed caches")),
+        };
+    }
+
     // methods
     pub fn parse(&mut self) -> Result<(), failure::Error> {
         // currently supports {1}, {1?}, {1..}, {1..2}, {1..?}

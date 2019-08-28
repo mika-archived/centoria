@@ -1,6 +1,8 @@
 #[macro_use]
 extern crate clap;
 extern crate dirs;
+#[macro_use]
+extern crate downcast_rs;
 extern crate exitfailure;
 extern crate failure;
 extern crate regex;
