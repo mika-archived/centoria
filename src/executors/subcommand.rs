@@ -108,6 +108,10 @@ impl SubCommand {
         return Err(failure::err_msg(msg));
     }
 
+    pub fn has_subcommands(&self) -> bool {
+        return self.subcommands.len() > 0;
+    }
+
     fn run_command(&self, execute: &str) -> Result<ExitStatus, failure::Error> {
         #[rustfmt::skip]
         match Command::new(self.shell()).args(&["-c", execute]).status() {

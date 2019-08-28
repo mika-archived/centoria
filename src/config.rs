@@ -106,6 +106,11 @@ impl Config {
             let parent: &mut Box<dyn Executor> = self.entries.get_mut(program).unwrap();
             let parent: &mut SubCommand = parent.downcast_mut::<SubCommand>().unwrap();
             parent.remove(name)?;
+
+            if !parent.has_subcommands() {
+                self.entries.remove(program);
+            }
+
             return Ok(());
         }
 
