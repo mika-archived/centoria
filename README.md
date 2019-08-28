@@ -36,14 +36,13 @@ $ cet add search rg --condition "which rg"
 If you want to pass the arguments anywhere, you can specify them using `{INDEXER}` as placeholder.  
 Example:
 
-* You want the 1st arguments, please use `{0}` for placeholder.
-* You want the 1st, 2nd and 3rd arguments, please use `{0..3}` for placeholder.
-* You want the 2nd and later arguments, please use `{2..}` for placeholder.
-* You want the 2nd and later arguments, but they are optional, please use `{2..?}` for placeholder.
-  * `?` acts as optional parameter
-    * Single Optional : `{0?}`
-    * Multiple Optional : `{0..?}`
-
+- You want the 1st arguments, please use `{0}` for placeholder.
+- You want the 1st, 2nd and 3rd arguments, please use `{0..3}` for placeholder.
+- You want the 2nd and later arguments, please use `{2..}` for placeholder.
+- You want the 2nd and later arguments, but they are optional, please use `{2..?}` for placeholder.
+  - `?` acts as optional parameter
+    - Single Optional : `{0?}`
+    - Multiple Optional : `{0..?}`
 
 ```bash
 # explicitly set the position of a parameter for search
@@ -52,17 +51,26 @@ $ cet add search "rg {0..}" --condition "which rg"
 $ cet add show-err-logs "tail -f /var/log/{0}/error.log"
 ```
 
+Centoria also supports functions as sub-command:
+
+```bash
+# `docker c` expands as `docker container`
+$ cet add c container --program docker
+# also use function (this function has no meaning, but an example)
+$ cet add prune "{0} prune" -- program docker
+
+```
 
 ## Centoria TOML configuration
 
 Centoria find configuration from the following paths:
 
-* `$CENTORIA_CONFIG_PATH`
-* System configuration directory
-  * Linux: `$XDG_CONFIG_HOME/centoria/centoria.toml` or `$HOME/.config/centoria/centoria.toml`
-  * macOS: `$HOME/Library/Preferences/centoria/centoria.toml`
-  * Windows: `$APPDATA/centoria/centoria.toml`
-* `$HOME/.centoria.toml`
+- `$CENTORIA_CONFIG_PATH`
+- System configuration directory
+  - Linux: `$XDG_CONFIG_HOME/centoria/centoria.toml` or `$HOME/.config/centoria/centoria.toml`
+  - macOS: `$HOME/Library/Preferences/centoria/centoria.toml`
+  - Windows: `$APPDATA/centoria/centoria.toml`
+- `$HOME/.centoria.toml`
 
 If you add a new function from command-line, Centoria creates a new file in `$HOME/.centoria.toml`.
 
@@ -81,5 +89,11 @@ description = 'show error logs'
 descriptions = [
   'application name' # description of argument {0}
 ]
-```
 
+[docker]
+runas = 'subcommand'
+command = 'docker'
+
+[docker.subcommands.c]
+command = 'container'
+```
