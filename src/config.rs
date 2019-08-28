@@ -86,9 +86,9 @@ impl Config {
 
     fn add_child(&mut self, name: &str, executor: Box<SubCommand>) -> Result<(), failure::Error> {
         if self.exists(name) {
-            let existing: &mut Box<dyn Executor> = self.entries.get_mut(name).unwrap();
-            let existing: &mut SubCommand = existing.downcast_mut::<SubCommand>().unwrap();
-            existing.add(*executor)?; // unboxing
+            let parent: &mut Box<dyn Executor> = self.entries.get_mut(name).unwrap();
+            let parent: &mut SubCommand = parent.downcast_mut::<SubCommand>().unwrap();
+            parent.add(*executor)?; // unboxing
         } else {
             self.entries.insert(name.to_owned(), executor);
         }
@@ -96,7 +96,19 @@ impl Config {
         return Ok(());
     }
 
-    pub fn remove(&mut self, name: &str) -> Result<(), failure::Error> {
+    pub fn remove(&mut self, name: &str, program: Option<&str>) -> Result<(), failure::Error> {
+        if let Some(program) = program {
+            if !self.exists(program) {
+                let msg = format!("function `{}` is not exists", program);
+                return Err(failure::err_msg(msg));
+            }
+
+            let parent: &mut Box<dyn Executor> = self.entries.get_mut(program).unwrap();
+            let parent: &mut SubCommand = parent.downcast_mut::<SubCommand>().unwrap();
+            parent.remove(name)?;
+            return Ok(());
+        }
+
         if !self.exists(name) {
             let msg = format!("function `{}` is not exists", name);
             return Err(failure::err_msg(msg));

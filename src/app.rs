@@ -48,6 +48,7 @@ pub fn build_app() -> App<'static, 'static> {
                     Arg::with_name("program")
                         .short("p")
                         .long("program")
+                        .help("original command that treats this function as subcommand")
                         .takes_value(true),
                 ),
         )
@@ -59,6 +60,13 @@ pub fn build_app() -> App<'static, 'static> {
                         .help("name of the function you want to remove")
                         .required(true)
                         .index(1),
+                )
+                .arg(
+                    Arg::with_name("program")
+                        .short("p")
+                        .long("program")
+                        .help("original command that treats this function as subcommand")
+                        .takes_value(true),
                 ),
         )
         .subcommand(

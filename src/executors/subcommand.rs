@@ -98,6 +98,16 @@ impl SubCommand {
         return Ok(());
     }
 
+    pub fn remove(&mut self, name: &str) -> Result<(), failure::Error> {
+        if self.exists(name) {
+            self.subcommands.remove(name);
+            return Ok(());
+        }
+
+        let msg = format!("sub-function `{}` is not exists in this function", name);
+        return Err(failure::err_msg(msg));
+    }
+
     fn run_command(&self, execute: &str) -> Result<ExitStatus, failure::Error> {
         #[rustfmt::skip]
         match Command::new(self.shell()).args(&["-c", execute]).status() {

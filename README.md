@@ -57,8 +57,9 @@ Centoria also supports functions as sub-command:
 # `docker c` expands as `docker container`
 $ cet add c container --program docker
 # also use function (this function has no meaning, but an example)
-$ cet add prune "{0} prune" -- program docker
-
+$ cet add prune "{0} prune" --program docker
+# remove
+$ cet remove prune --program docker
 ```
 
 ## Centoria TOML configuration
