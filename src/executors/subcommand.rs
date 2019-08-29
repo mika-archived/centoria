@@ -5,6 +5,7 @@ use clap::ArgMatches;
 
 use crate::argparse::ArgParser;
 use crate::executors::Executor;
+use crate::pad::right_pad;
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct SubCommand {
@@ -201,7 +202,7 @@ impl Executor for SubCommand {
             None => "No description provided",
         };
 
-        // let length = self.subcommands.iter().max_by_key(|x| x.0.len()).unwrap();
+        let longest_key = self.subcommands.iter().max_by_key(|x| x.0.len()).unwrap();
         let subcommands = self
             .subcommands
             .iter()
@@ -210,7 +211,11 @@ impl Executor for SubCommand {
                     Some(value) => value,
                     None => "No description provided",
                 };
-                format!("{} : {}", key, description)
+                format!(
+                    "{} : {}",
+                    right_pad(key, longest_key.0.len()),
+                    description.replace("\n", " ") // allow single-line only in short details
+                )
             })
             .collect::<Vec<String>>();
 
