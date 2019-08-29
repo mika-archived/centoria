@@ -94,6 +94,13 @@ pub fn build_app() -> App<'static, 'static> {
                         .help("name of the function to display")
                         .required(true)
                         .index(1),
+                )
+                .arg(
+                    Arg::with_name("subcommand")
+                        .short("s")
+                        .long("sub")
+                        .help("name of the subcommand to display (if you pass this argument to alias or function, ignored this)")
+                        .takes_value(true),
                 ),
         );
 }

@@ -198,6 +198,19 @@ impl Executor for SubCommand {
 
     fn display(&self, args: &ArgMatches) -> Result<(), failure::Error> {
         let name = args.value_of("name").unwrap();
+        let sub = args.value_of("subcommand");
+
+        if let Some(sub) = sub {
+            let subcommand = self.subcommands.get(sub);
+            return match subcommand {
+                Some(value) => value.display(&name, &sub),
+                None => {
+                    let msg = format!("subcommand `{}` is not exists in this function", sub);
+                    Err(failure::err_msg(msg))
+                }
+            };
+        }
+
         let description = match &self.description {
             Some(value) => value,
             None => "No description provided",
@@ -226,8 +239,7 @@ Shell          : {shell}
 {description}
 
 SubCommands (show details of subcommand, pass `-s <name>`):
-{subcommands}
-        ",
+{subcommands}",
             name = name,
             description = description,
             command = fmt::left_pad_without_1st(&self.command, 17),
@@ -246,5 +258,62 @@ SubCommands (show details of subcommand, pass `-s <name>`):
             "alias {name}='cet exec {name} -- '",
             name = name.to_owned()
         ));
+    }
+}
+
+impl Function {
+    fn display(&self, parent: &str, myself: &str) -> Result<(), failure::Error> {
+        let description = match &self.description {
+            Some(value) => value,
+            None => "No description provided",
+        };
+        let descriptions = match &self.descriptions {
+            Some(values) => Some(values.iter().map(|s| s.as_str()).collect()),
+            None => None,
+        };
+        let mut parser = ArgParser::new(&self.command, descriptions);
+        parser.parse()?;
+
+        let parameters = match parser.arguments() {
+            Some(values) => values
+                .iter()
+                .enumerate()
+                .map(|(i, w)| {
+                    format!(
+                        "{index} ({opt}): {description}",
+                        index = i,
+                        opt = w.attribute(),
+                        description = fmt::to_single_line(w.description())
+                    )
+                })
+                .collect::<Vec<String>>(),
+            None => vec!["No description provided".to_owned()],
+        };
+
+        println!(
+            "\
+Usage (Cet)    : cet exec {parent} -- {myself} <EXTRA ARGS>
+Usage (Direct) : {parent} {myself} <EXTRA ARGS>
+Wrapped        : {parent} {myself}",
+            parent = parent,
+            myself = myself,
+        );
+
+        if parameters.len() > 0 {
+            println!(
+                "\
+Parameters     :
+{parameters}",
+                parameters = parameters
+                    .iter()
+                    .map(|w| format!("    {}", w))
+                    .collect::<Vec<String>>()
+                    .join("\n"),
+            );
+        }
+
+        println!("\n{description}", description = description.trim(),);
+
+        return Ok(());
     }
 }

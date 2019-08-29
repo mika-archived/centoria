@@ -140,15 +140,14 @@ Shell          : {shell}
 Parameters     :
 {parameters}
 
-{description}
-        ",
+{description}",
             name = name,
             parameters = parameters
                 .iter()
                 .map(|w| format!("    {}", w))
                 .collect::<Vec<String>>()
                 .join("\n"),
-            description = description,
+            description = description.trim(),
             command = fmt::left_pad_without_1st(&self.command, 17),
             shell = self.shell(),
         );

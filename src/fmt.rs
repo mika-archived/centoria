@@ -1,5 +1,5 @@
 pub fn to_single_line(string: &str) -> String {
-    return string.replace("\n", " ");
+    return string.replace("\n", " ").trim().to_owned();
 }
 
 pub fn left_pad_without_1st(string: &str, pad: usize) -> String {
