@@ -15,6 +15,7 @@ mod argparse;
 mod commands;
 mod config;
 mod executors;
+mod fmt;
 mod pad;
 
 use std::process::exit;

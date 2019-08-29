@@ -3,6 +3,7 @@ use std::process::{Command, ExitStatus};
 use clap::ArgMatches;
 
 use crate::executors::Executor;
+use crate::fmt;
 
 /**
  * alias works as shell aliases
@@ -106,7 +107,7 @@ Shell          : {shell}
         ",
             name = name,
             description = description,
-            command = self.command,
+            command = fmt::left_pad_without_1st(&self.command, 17),
             shell = self.shell(),
         );
 

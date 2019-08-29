@@ -5,7 +5,8 @@ use clap::ArgMatches;
 
 use crate::argparse::ArgParser;
 use crate::executors::Executor;
-use crate::pad::right_pad;
+use crate::fmt;
+use crate::pad;
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct SubCommand {
@@ -208,10 +209,10 @@ impl Executor for SubCommand {
             .iter()
             .map(|(key, value)| {
                 let description = match &value.description {
-                    Some(value) => value.replace("\n", " "), // allow single-liny only in short details
+                    Some(value) => fmt::to_single_line(value),
                     None => "No description provided".to_owned(),
                 };
-                format!("{} : {}", right_pad(key, longest.len()), description)
+                format!("{} : {}", pad::right_pad(key, longest.len()), description)
             })
             .collect::<Vec<String>>();
 
@@ -219,8 +220,8 @@ impl Executor for SubCommand {
             "\
 Usage (Cet)    : cet exec {name} -- <EXTRA ARGS>
 Usage (Direct) : {name} <EXTRA ARGS>
-Shell          : {shell}
 Wrapped        : {command}
+Shell          : {shell}
 
 {description}
 
@@ -229,7 +230,7 @@ SubCommands (show details of subcommand, pass `-s <name>`):
         ",
             name = name,
             description = description,
-            command = self.command,
+            command = fmt::left_pad_without_1st(&self.command, 17),
             shell = self.shell(),
             subcommands = subcommands
                 .iter()

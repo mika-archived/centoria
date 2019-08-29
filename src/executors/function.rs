@@ -4,6 +4,7 @@ use clap::ArgMatches;
 
 use crate::argparse::ArgParser;
 use crate::executors::Executor;
+use crate::fmt;
 
 /**
  * function works as shell functions
@@ -111,8 +112,8 @@ impl Executor for Function {
 
         let name = args.value_of("name").unwrap();
         let description = match &self.description {
-            Some(value) => value,
-            None => "No description provided",
+            Some(value) => fmt::to_single_line(value),
+            None => "No description provided".to_owned(),
         };
         let parameters = match parser.arguments() {
             Some(values) => values
@@ -123,7 +124,7 @@ impl Executor for Function {
                         "{index} ({opt}): {description}",
                         index = i,
                         opt = w.attribute(),
-                        description = w.description()
+                        description = fmt::to_single_line(w.description())
                     )
                 })
                 .collect::<Vec<String>>(),
@@ -148,7 +149,7 @@ Parameters     :
                 .collect::<Vec<String>>()
                 .join("\n"),
             description = description,
-            command = self.command,
+            command = fmt::left_pad_without_1st(&self.command, 17),
             shell = self.shell(),
         );
         return Ok(());
