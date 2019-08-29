@@ -5,7 +5,7 @@ pub fn build_app() -> App<'static, 'static> {
         .version(crate_version!())
         .author(crate_authors!())
         .about(crate_description!())
-        .subcommand(SubCommand::with_name("init").about("Initialize centoria for shell"))
+        .subcommand(SubCommand::with_name("init").about("initialize centoria for shell"))
         .subcommand(
             SubCommand::with_name("add")
                 .about("add a function to centoria")

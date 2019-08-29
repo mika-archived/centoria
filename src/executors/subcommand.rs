@@ -202,20 +202,16 @@ impl Executor for SubCommand {
             None => "No description provided",
         };
 
-        let longest_key = self.subcommands.iter().max_by_key(|x| x.0.len()).unwrap();
+        let (longest, _) = self.subcommands.iter().max_by_key(|x| x.0.len()).unwrap();
         let subcommands = self
             .subcommands
             .iter()
             .map(|(key, value)| {
                 let description = match &value.description {
-                    Some(value) => value,
-                    None => "No description provided",
+                    Some(value) => value.replace("\n", " "), // allow single-liny only in short details
+                    None => "No description provided".to_owned(),
                 };
-                format!(
-                    "{} : {}",
-                    right_pad(key, longest_key.0.len()),
-                    description.replace("\n", " ") // allow single-line only in short details
-                )
+                format!("{} : {}", right_pad(key, longest.len()), description)
             })
             .collect::<Vec<String>>();
 
@@ -223,8 +219,8 @@ impl Executor for SubCommand {
             "\
 Usage (Cet)    : cet exec {name} -- <EXTRA ARGS>
 Usage (Direct) : {name} <EXTRA ARGS>
-Wrapped        : {command}
 Shell          : {shell}
+Wrapped        : {command}
 
 {description}
 

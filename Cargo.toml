@@ -1,6 +1,6 @@
 [package]
 name = "centoria"
-description = "alias manager for macOS and Linux"
+description = "function manager for macOS and Linux"
 version = "0.1.0"
 authors = ["Mikazuki Fuyuno <mikazuki_fuyuno@outlook.com>"]
 edition = "2018"
