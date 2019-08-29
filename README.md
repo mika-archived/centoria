@@ -62,6 +62,31 @@ $ cet add prune "{0} prune" --program docker
 $ cet remove prune --program docker
 ```
 
+Execute the function:
+
+```bash
+# direct
+$ search "Hello" ./README.md
+# via centoria
+$ cet exec search -- "Hello" ./README.md
+# subcommands (direct)
+$ docker c
+# subcommands (via centoria)
+$ cet exec docker -- c
+```
+
+If you want to use centoria as collection of subcommands:
+
+```bash
+# 1st, create a base command
+$ cet add centoria "CENTORIA_CONFIG_PATH=/path/to/config.toml cet exec {0} -- {1..?}" --shell bash
+# 2nd, write functions to /path/to/config.toml
+$ vim /path/to/config.toml
+# 3rd, execute via base command
+$ centoria search "Hello" ./README.md
+```
+
+
 ## Centoria TOML configuration
 
 Centoria find configuration from the following paths:
