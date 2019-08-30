@@ -65,11 +65,11 @@ $ cet remove prune --program docker
 Execute the function:
 
 ```bash
-# direct
+# direct (required `cet init`)
 $ search "Hello" ./README.md
 # via centoria
 $ cet exec search -- "Hello" ./README.md
-# subcommands (direct)
+# subcommands (direct, required `cet init`)
 $ docker c
 # subcommands (via centoria)
 $ cet exec docker -- c
@@ -85,6 +85,8 @@ $ vim /path/to/config.toml
 # 3rd, execute via base command
 $ centoria search "Hello" ./README.md
 ```
+
+For more information about Centoria, please see the result of `cet help` or `cet help <COMMAND>`.
 
 
 ## Centoria TOML configuration
