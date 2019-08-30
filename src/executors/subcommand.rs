@@ -294,9 +294,10 @@ impl Function {
             "\
 Usage (Cet)    : cet exec {parent} -- {myself} <EXTRA ARGS>
 Usage (Direct) : {parent} {myself} <EXTRA ARGS>
-Wrapped        : {parent} {myself}",
+Wrapped        : {parent} {command}",
             parent = parent,
             myself = myself,
+            command = self.command,
         );
 
         if parameters.len() > 0 {
