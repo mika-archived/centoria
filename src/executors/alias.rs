@@ -119,4 +119,11 @@ Shell          : {shell}
             name = name.to_owned()
         ));
     }
+
+    fn description(&self) -> &str {
+        return match &self.description {
+            Some(value) => value,
+            None => "No description provided"
+        };
+    }
 }

@@ -45,6 +45,9 @@ fn run() -> Result<(), failure::Error> {
                 exit(code);
             }
         }
+        ("list", Some(_)) => {
+            commands::list()?;
+        }
         ("show", Some(matches)) => {
             commands::show(matches)?;
         }

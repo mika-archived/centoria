@@ -12,10 +12,11 @@ pub use function::Function;
 pub use subcommand::SubCommand;
 
 #[typetag::serde(tag = "runas")]
-pub trait Executor : Downcast {
+pub trait Executor: Downcast {
     fn can_execute(&self) -> bool;
-    fn execute(&self, args: &ArgMatches) -> Result<ExitStatus, failure::Error>;
+    fn description(&self) -> &str;
     fn display(&self, args: &ArgMatches) -> Result<(), failure::Error>;
+    fn execute(&self, args: &ArgMatches) -> Result<ExitStatus, failure::Error>;
     fn export_as(&self, name: &str) -> Result<String, failure::Error>;
 }
 

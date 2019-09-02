@@ -86,6 +86,7 @@ pub fn build_app() -> App<'static, 'static> {
                         .last(true),
                 ),
         )
+        .subcommand(SubCommand::with_name("list").about("list all functions"))
         .subcommand(
             SubCommand::with_name("show")
                 .about("show function details")
