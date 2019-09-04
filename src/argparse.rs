@@ -107,6 +107,13 @@ impl ArgParser {
                 is_required: false,
                 range: (start..std::usize::MAX),
             });
+        } else if end == "-1" {
+            return Ok(Argument {
+                capture_str: captures.get(0).unwrap().as_str().to_owned(),
+                description: None, // not supported yet
+                is_required: true,
+                range: (start..std::usize::MAX),
+            });
         } else {
             return Err(failure::err_msg(format!("invalid accessor: {}", end)));
         }
@@ -170,5 +177,105 @@ impl Argument {
 
     fn is_optional_range(&self) -> bool {
         return !self.is_required && self.range.end == std::usize::MAX;
+    }
+}
+
+#[cfg(test)]
+impl Clone for Argument {
+    fn clone(&self) -> Self {
+        let description = match &self.description {
+            Some(value) => Some(value.to_owned()),
+            None => None,
+        };
+
+        return Argument {
+            capture_str: self.capture_str.to_owned(),
+            description,
+            is_required: if self.is_required { true } else { false },
+            range: Range {
+                start: self.range.start,
+                end: self.range.end,
+            },
+        };
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::{ArgParser, Argument};
+    use std::ops::Range;
+    use std::usize;
+
+    // helper
+    fn initialize_and_parsed(string: &str) -> Result<Vec<Argument>, failure::Error> {
+        let mut parser = ArgParser::new(string, None);
+        parser.parse()?;
+
+        return Ok(parser
+            .arguments()
+            .unwrap()
+            .iter()
+            .map(|w| w.clone())
+            .collect());
+    }
+
+    fn unlimited_range(start: usize) -> Range<usize> {
+        return Range {
+            start,
+            end: usize::MAX,
+        };
+    }
+
+    #[test]
+    fn parse() {
+        // required index argument
+        let arguments = initialize_and_parsed("{0}").unwrap();
+
+        assert_eq!(arguments.len(), 1);
+        assert_eq!(arguments[0].capture_str, "{0}");
+        assert_eq!(arguments[0].is_required, true);
+        assert_eq!(arguments[0].range, 0..1);
+
+        // optional index argument
+        let arguments = initialize_and_parsed("{0?}").unwrap();
+
+        assert_eq!(arguments.len(), 1);
+        assert_eq!(arguments[0].capture_str, "{0?}");
+        assert_eq!(arguments[0].is_required, false);
+        assert_eq!(arguments[0].range, 0..1);
+
+        // required range argument (omitted last index)
+        let arguments = initialize_and_parsed("{0..}").unwrap();
+
+        assert_eq!(arguments.len(), 1);
+        assert_eq!(arguments[0].capture_str, "{0..}");
+        assert_eq!(arguments[0].is_required, true);
+        assert_eq!(arguments[0].range, unlimited_range(0));
+
+        // required range argument
+        let arguments = initialize_and_parsed("{0..2}").unwrap();
+
+        assert_eq!(arguments.len(), 1);
+        assert_eq!(arguments[0].capture_str, "{0..2}");
+        assert_eq!(arguments[0].is_required, true);
+        assert_eq!(arguments[0].range, 0..2);
+
+        // optional range argument
+        let arguments = initialize_and_parsed("{0..?}").unwrap();
+
+        assert_eq!(arguments.len(), 1);
+        assert_eq!(arguments[0].capture_str, "{0..?}");
+        assert_eq!(arguments[0].is_required, false);
+        assert_eq!(arguments[0].range, unlimited_range(0));
+
+        // no matches
+        let arguments = initialize_and_parsed("").unwrap();
+
+        assert_eq!(arguments.len(), 0);
+
+        // no matches
+        let arguments = initialize_and_parsed("{-1}").unwrap();
+
+        assert_eq!(arguments.len(), 0);
     }
 }
