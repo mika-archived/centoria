@@ -5,6 +5,7 @@ use clap::ArgMatches;
 use crate::argparse::ArgParser;
 use crate::executors::Executor;
 use crate::fmt;
+use crate::pad;
 
 /**
  * function works as shell functions
@@ -148,7 +149,7 @@ Parameters     :
                 .collect::<Vec<String>>()
                 .join("\n"),
             description = description.trim(),
-            command = fmt::left_pad_without_1st(&self.command, 17),
+            command = pad::left_pad_without_1st(&self.command, 17),
             shell = self.shell(),
         );
         return Ok(());

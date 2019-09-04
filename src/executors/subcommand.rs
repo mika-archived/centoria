@@ -242,7 +242,7 @@ SubCommands (show details of subcommand, pass `-s <name>`):
 {subcommands}",
             name = name,
             description = description,
-            command = fmt::left_pad_without_1st(&self.command, 17),
+            command = pad::left_pad_without_1st(&self.command, 17),
             shell = self.shell(),
             subcommands = subcommands
                 .iter()
