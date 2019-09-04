@@ -1,4 +1,6 @@
 # Centoria
+[![GitHub](https://img.shields.io/github/license/mika-f/centoria?style=flat-square)](./LICENSE)
+![https://github.com/mika-f/centoria/workflows/Test/badge.svg]()
 
 Centoria - function manager for macOS and Linux.
 
