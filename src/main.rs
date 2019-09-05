@@ -5,6 +5,7 @@ extern crate dirs;
 extern crate downcast_rs;
 extern crate exitfailure;
 extern crate failure;
+extern crate itertools;
 extern crate regex;
 extern crate serde;
 #[macro_use]
