@@ -64,6 +64,7 @@ impl ArgParser {
             }
         }
 
+        arguments.sort_by_key(|w| w.range.start);
         self.arguments = Some(arguments);
         return Ok(());
     }
@@ -267,6 +268,28 @@ mod tests {
         assert_eq!(arguments[0].capture_str, "{0..?}");
         assert_eq!(arguments[0].is_required, false);
         assert_eq!(arguments[0].range, unlimited_range(0));
+
+        // multiple ordered arguments (index)
+        let arguments = initialize_and_parsed("{0} {1?}").unwrap();
+
+        assert_eq!(arguments.len(), 2);
+        assert_eq!(arguments[0].capture_str, "{0}");
+        assert_eq!(arguments[0].is_required, true);
+        assert_eq!(arguments[0].range, 0..1);
+        assert_eq!(arguments[1].capture_str, "{1?}");
+        assert_eq!(arguments[1].is_required, false);
+        assert_eq!(arguments[1].range, 1..2);
+
+        // multiple inverted arguments (index)
+        let arguments = initialize_and_parsed("{1?} {0}").unwrap();
+
+        assert_eq!(arguments.len(), 2);
+        assert_eq!(arguments[0].capture_str, "{0}");
+        assert_eq!(arguments[0].is_required, true);
+        assert_eq!(arguments[0].range, 0..1);
+        assert_eq!(arguments[1].capture_str, "{1?}");
+        assert_eq!(arguments[1].is_required, false);
+        assert_eq!(arguments[1].range, 1..2);
 
         // no matches
         let arguments = initialize_and_parsed("").unwrap();
