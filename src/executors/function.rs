@@ -87,8 +87,8 @@ impl Executor for Function {
 
         let execute = match parser.fill(extra) {
             Ok(value) => value,
-            Err(_) => {
-                let msg = "required parameter(s) is missing, please use `show` subcommand for checking parameters";
+            Err(e) => {
+                let msg = format!("{}, please use `show` subcommand for checking parameters", e);
                 return Err(failure::err_msg(msg));
             }
         };
