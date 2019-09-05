@@ -1,3 +1,4 @@
+#[allow(dead_code)]
 pub fn left_pad(string: &str, pad: usize) -> String {
     let spaces = checked_calculate(pad, string.len());
     return format!("{}{}", " ".repeat(spaces), string);
