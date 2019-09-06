@@ -137,11 +137,12 @@ impl ArgParser {
 
         let mut replaced = self.string.to_owned();
         for argument in arguments {
-            let actual = if argument.is_optional_range() {
+            let actual = if argument.is_unlimited_range() {
                 variables.len()
             } else {
                 argument.range.end
             };
+
             let params = match variables.get(argument.range.start..actual) {
                 Some(values) => values
                     .iter()
@@ -182,8 +183,12 @@ impl Argument {
         };
     }
 
+    fn is_unlimited_range(&self) -> bool {
+        return self.range.end == std::usize::MAX;
+    }
+
     fn is_optional_range(&self) -> bool {
-        return !self.is_required && self.range.end == std::usize::MAX;
+        return !self.is_required && self.is_unlimited_range();
     }
 }
 
