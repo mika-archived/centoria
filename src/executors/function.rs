@@ -1,6 +1,8 @@
+use std::io::Write;
 use std::process::{Command, ExitStatus};
 
 use clap::ArgMatches;
+use termcolor::{Color, ColorChoice, ColorSpec, StandardStream, WriteColor};
 
 use crate::argparse::ArgParser;
 use crate::executors::Executor;
@@ -88,10 +90,24 @@ impl Executor for Function {
         let execute = match parser.fill(extra) {
             Ok(value) => value,
             Err(e) => {
-                let msg = format!("{}, please use `show` subcommand for checking parameters", e);
+                let msg = format!(
+                    "{}, please use `show` subcommand for checking parameters",
+                    e
+                );
                 return Err(failure::err_msg(msg));
             }
         };
+
+        let mut stdout = StandardStream::stdout(ColorChoice::Always);
+        let mut clrspc = ColorSpec::new();
+        clrspc.set_bold(true).set_fg(Some(Color::Green));
+        stdout.set_color(&clrspc)?;
+        write!(&mut stdout, "Executing")?;
+
+        clrspc.set_bold(false).set_fg(None);
+        stdout.set_color(&clrspc)?;
+        writeln!(&mut stdout, ": {}", execute.replace("\n", ""))?;
+        stdout.flush()?;
 
         #[rustfmt::skip]
         match Command::new(self.shell()).args(&["-c", &execute.trim()]).status() {
@@ -165,7 +181,7 @@ Parameters     :
     fn description(&self) -> &str {
         return match &self.description {
             Some(value) => value,
-            None => "No description provided"
+            None => "No description provided",
         };
     }
 }

@@ -263,7 +263,7 @@ SubCommands (show details of subcommand, pass `-s <name>`):
     fn description(&self) -> &str {
         return match &self.description {
             Some(value) => value,
-            None => "No description provided"
+            None => "No description provided",
         };
     }
 }
