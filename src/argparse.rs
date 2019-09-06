@@ -147,9 +147,9 @@ impl ArgParser {
                     .iter()
                     .map(|s| s.to_string())
                     .collect::<Vec<String>>(),
-                None => match argument.is_optional_range() {
-                    true => vec![],
-                    false => return Err(failure::err_msg("index out of bounds or invalid access")),
+                None => match argument.is_required {
+                    true => return Err(failure::err_msg("index out of bounds or invalid access")),
+                    false => vec![],
                 },
             };
 
