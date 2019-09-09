@@ -90,6 +90,7 @@ impl ArgParser {
             capture_str: captures.get(0).unwrap().as_str().to_owned(),
             description,
             is_required: !optional,
+            #[allow(clippy::range_plus_one)]
             range: (index..(index + 1)),
         })
     }

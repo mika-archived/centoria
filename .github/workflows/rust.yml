@@ -22,7 +22,7 @@ jobs:
         run: cargo test --verbose
 
   lint:
-    name: lint (using clippy)
+    name: lint
     runs-on: ubuntu-latest
 
     steps:
