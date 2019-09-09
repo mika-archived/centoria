@@ -19,5 +19,5 @@ pub fn list() -> Result<(), failure::Error> {
         );
     }
 
-    return Ok(());
+    Ok(())
 }

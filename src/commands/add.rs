@@ -5,13 +5,13 @@ use crate::config::Config;
 use crate::executors::{Alias, Executor, Function, SubCommand};
 
 pub fn add(args: &ArgMatches) -> Result<(), failure::Error> {
-    if let Some(_) = args.value_of("program") {
+    if args.value_of("program").is_some() {
         add_subcommand(args)?;
     } else {
         add_function(args)?;
     }
 
-    return Ok(());
+    Ok(())
 }
 
 fn add_function(args: &ArgMatches) -> Result<(), failure::Error> {
@@ -21,7 +21,7 @@ fn add_function(args: &ArgMatches) -> Result<(), failure::Error> {
     cfg.add(name, construct(args))?;
     cfg.save()?;
 
-    return Ok(());
+    Ok(())
 }
 
 fn add_subcommand(args: &ArgMatches) -> Result<(), failure::Error> {
@@ -38,7 +38,7 @@ fn add_subcommand(args: &ArgMatches) -> Result<(), failure::Error> {
     cfg.add(program, Box::new(executor))?;
     cfg.save()?;
 
-    return Ok(());
+    Ok(())
 }
 
 fn construct(args: &ArgMatches) -> Box<dyn Executor> {
@@ -49,8 +49,8 @@ fn construct(args: &ArgMatches) -> Box<dyn Executor> {
 
     let regex = Regex::new(r"\{\d+(\.\.(\d+)?)?\}").unwrap();
     if regex.is_match(&command) {
-        return Box::new(Function::new(&command, condition, description, shell));
+        Box::new(Function::new(&command, condition, description, shell))
     } else {
-        return Box::new(Alias::new(&command, condition, description, shell));
+        Box::new(Alias::new(&command, condition, description, shell))
     }
 }

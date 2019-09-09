@@ -25,7 +25,7 @@ use std::process::exit;
 use exitfailure::ExitFailure;
 
 fn main() -> Result<(), ExitFailure> {
-    return Ok(run()?);
+    Ok(run()?)
 }
 
 fn run() -> Result<(), failure::Error> {
@@ -59,5 +59,5 @@ fn run() -> Result<(), failure::Error> {
         }
     };
 
-    return Ok(());
+    Ok(())
 }

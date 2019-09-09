@@ -36,7 +36,7 @@ impl Config {
             }
         };
 
-        return Ok(Config { entries });
+        Ok(Config { entries })
     }
 
     fn find_valid_path() -> Result<PathBuf, failure::Error> {
@@ -66,7 +66,8 @@ impl Config {
 
             return Ok(path);
         }
-        return Err(failure::err_msg("could not detect configuration path."));
+
+        Err(failure::err_msg("could not detect configuration path."))
     }
 
     // instance methods
@@ -81,7 +82,7 @@ impl Config {
         }
 
         self.entries.insert(name.to_string(), executor);
-        return Ok(());
+        Ok(())
     }
 
     fn add_child(&mut self, name: &str, executor: Box<SubCommand>) -> Result<(), failure::Error> {
@@ -93,7 +94,7 @@ impl Config {
             self.entries.insert(name.to_owned(), executor);
         }
 
-        return Ok(());
+        Ok(())
     }
 
     pub fn remove(&mut self, name: &str, program: Option<&str>) -> Result<(), failure::Error> {
@@ -120,22 +121,19 @@ impl Config {
         }
 
         self.entries.remove(name);
-        return Ok(());
+        Ok(())
     }
 
     pub fn get(&self, name: &str) -> Option<&Box<dyn Executor>> {
-        return self.entries.get(name);
+        self.entries.get(name)
     }
 
     pub fn exists(&self, name: &str) -> bool {
-        return match self.entries.get(name) {
-            Some(_) => true,
-            None => false,
-        };
+        self.entries.get(name).is_some()
     }
 
     pub fn keys(&self) -> Vec<String> {
-        return self.entries.keys().cloned().collect();
+        self.entries.keys().cloned().collect()
     }
 
     pub fn save(&mut self) -> Result<(), failure::Error> {
@@ -150,6 +148,6 @@ impl Config {
 
         fs::write(path, toml_str)?;
 
-        return Ok(());
+        Ok(())
     }
 }

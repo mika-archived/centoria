@@ -6,8 +6,8 @@ pub fn left_pad(string: &str, pad: usize) -> String {
 
 pub fn left_pad_without_1st(string: &str, pad: usize) -> String {
     // oh...
-    return string
-        .split("\n")
+    string
+        .split('\n')
         .collect::<Vec<&str>>()
         .iter()
         .enumerate()
@@ -15,7 +15,7 @@ pub fn left_pad_without_1st(string: &str, pad: usize) -> String {
         .collect::<Vec<String>>()
         .join("\n")
         .trim()
-        .to_owned();
+        .to_owned()
 }
 
 pub fn right_pad(string: &str, pad: usize) -> String {
@@ -24,10 +24,10 @@ pub fn right_pad(string: &str, pad: usize) -> String {
 }
 
 fn checked_calculate(s1: usize, s2: usize) -> usize {
-    return match s1.checked_sub(s2) {
+    match s1.checked_sub(s2) {
         Some(value) => value,
         None => 0,
-    };
+    }
 }
 
 #[cfg(test)]

@@ -14,5 +14,5 @@ pub fn show(args: &ArgMatches) -> Result<(), failure::Error> {
     };
     executor.display(args)?;
 
-    return Ok(());
+    Ok(())
 }

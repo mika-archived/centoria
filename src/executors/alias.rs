@@ -34,19 +34,19 @@ impl Alias {
         let description = description.map(|s| s.to_owned());
         let shell = shell.map(|s| s.to_owned());
 
-        return Alias {
+        Alias {
             command: command.to_owned(),
             condition,
             description,
             shell,
-        };
+        }
     }
 
     fn shell(&self) -> &str {
-        return match &self.shell {
+        match &self.shell {
             Some(shell) => &shell,
             None => "sh",
-        };
+        }
     }
 }
 
@@ -68,7 +68,7 @@ impl Executor for Alias {
             };
         }
 
-        return true;
+        true
     }
 
     fn execute(&self, args: &ArgMatches) -> Result<ExitStatus, failure::Error> {
@@ -110,20 +110,20 @@ Shell          : {shell}
             shell = self.shell(),
         );
 
-        return Ok(());
+        Ok(())
     }
 
     fn export_as(&self, name: &str) -> Result<String, failure::Error> {
-        return Ok(format!(
+        Ok(format!(
             "alias {name}='cet exec {name} -- '",
             name = name.to_owned()
-        ));
+        ))
     }
 
     fn description(&self) -> &str {
-        return match &self.description {
+        match &self.description {
             Some(value) => value,
-            None => "No description provided"
-        };
+            None => "No description provided",
+        }
     }
 }

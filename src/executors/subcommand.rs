@@ -57,24 +57,21 @@ impl SubCommand {
             },
         );
 
-        return SubCommand {
+        SubCommand {
             command: program.to_owned(),
             condition,
             description: None,
             shell,
             subcommands,
-        };
+        }
     }
 
     pub fn get(&self, name: &str) -> Option<&Function> {
-        return self.subcommands.get(name);
+        self.subcommands.get(name)
     }
 
     pub fn exists(&self, name: &str) -> bool {
-        return match self.subcommands.get(name) {
-            Some(_) => true,
-            None => false,
-        };
+        self.subcommands.get(name).is_some()
     }
 
     pub fn add(&mut self, executor: SubCommand) -> Result<(), failure::Error> {
@@ -85,7 +82,7 @@ impl SubCommand {
             }
 
             let description = value.description.as_ref().map(|s| s.to_owned());
-            let descriptions = value.descriptions.as_ref().map(|w: &Vec<String>| w.clone());
+            let descriptions = value.descriptions.as_ref().cloned();
 
             self.subcommands.insert(
                 key.to_owned(),
@@ -97,7 +94,7 @@ impl SubCommand {
             );
         }
 
-        return Ok(());
+        Ok(())
     }
 
     pub fn remove(&mut self, name: &str) -> Result<(), failure::Error> {
@@ -107,29 +104,28 @@ impl SubCommand {
         }
 
         let msg = format!("sub-function `{}` is not exists in this function", name);
-        return Err(failure::err_msg(msg));
+        Err(failure::err_msg(msg))
     }
 
     pub fn has_subcommands(&self) -> bool {
-        return self.subcommands.len() > 0;
+        !self.subcommands.is_empty()
     }
 
     fn run_command(&self, execute: &str) -> Result<ExitStatus, failure::Error> {
-        #[rustfmt::skip]
         match Command::new(self.shell()).args(&["-c", execute]).status() {
-            Ok(status) => return Ok(status),
+            Ok(status) => Ok(status),
             Err(e) => {
                 let msg = format!("function failed because {}", e);
-                return Err(failure::err_msg(msg));
+                Err(failure::err_msg(msg))
             }
-        };
+        }
     }
 
     fn shell(&self) -> &str {
-        return match &self.shell {
+        match &self.shell {
             Some(shell) => &shell,
             None => "sh",
-        };
+        }
     }
 }
 
@@ -151,7 +147,7 @@ impl Executor for SubCommand {
             };
         }
 
-        return true;
+        true
     }
 
     fn execute(&self, args: &ArgMatches) -> Result<ExitStatus, failure::Error> {
@@ -160,7 +156,7 @@ impl Executor for SubCommand {
             .map_or_else(|| vec![], |w| w.collect());
 
         // run original
-        if extra.len() == 0 {
+        if extra.is_empty() {
             return self.run_command(&self.command);
         }
 
@@ -193,7 +189,7 @@ impl Executor for SubCommand {
             }
         }
 
-        return self.run_command(&execute);
+        self.run_command(&execute)
     }
 
     fn display(&self, args: &ArgMatches) -> Result<(), failure::Error> {
@@ -250,21 +246,21 @@ SubCommands (show details of subcommand, pass `-s <name>`):
                 .collect::<Vec<String>>()
                 .join("\n")
         );
-        return Ok(());
+        Ok(())
     }
 
     fn export_as(&self, name: &str) -> Result<String, failure::Error> {
-        return Ok(format!(
+        Ok(format!(
             "alias {name}='cet exec {name} -- '",
             name = name.to_owned()
-        ));
+        ))
     }
 
     fn description(&self) -> &str {
-        return match &self.description {
+        match &self.description {
             Some(value) => value,
             None => "No description provided",
-        };
+        }
     }
 }
 
@@ -307,7 +303,7 @@ Wrapped        : {parent} {command}",
             command = self.command,
         );
 
-        if parameters.len() > 0 {
+        if !parameters.is_empty() {
             println!(
                 "\
 Parameters     :
@@ -322,6 +318,6 @@ Parameters     :
 
         println!("\n{description}", description = description.trim(),);
 
-        return Ok(());
+        Ok(())
     }
 }

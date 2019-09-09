@@ -40,20 +40,20 @@ impl Function {
         let description = description.map(|s| s.to_owned());
         let shell = shell.map(|s| s.to_owned());
 
-        return Function {
+        Function {
             command: command.to_owned(),
             condition,
             description,
             descriptions: None,
             shell,
-        };
+        }
     }
 
     fn shell(&self) -> &str {
-        return match &self.shell {
+        match &self.shell {
             Some(shell) => &shell,
             None => "sh",
-        };
+        }
     }
 }
 
@@ -75,7 +75,7 @@ impl Executor for Function {
             };
         }
 
-        return true;
+        true
     }
 
     fn execute(&self, args: &ArgMatches) -> Result<ExitStatus, failure::Error> {
@@ -168,20 +168,21 @@ Parameters     :
             command = pad::left_pad_without_1st(&self.command, 17),
             shell = self.shell(),
         );
-        return Ok(());
+
+        Ok(())
     }
 
     fn export_as(&self, name: &str) -> Result<String, failure::Error> {
-        return Ok(format!(
+        Ok(format!(
             "alias {name}='cet exec {name} -- '",
             name = name.to_owned()
-        ));
+        ))
     }
 
     fn description(&self) -> &str {
-        return match &self.description {
+        match &self.description {
             Some(value) => value,
             None => "No description provided",
-        };
+        }
     }
 }

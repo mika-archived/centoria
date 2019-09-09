@@ -21,5 +21,5 @@ pub fn exec(args: &ArgMatches) -> Result<ExitStatus, failure::Error> {
         return Err(failure::err_msg(msg));
     }
 
-    return Ok(executor.execute(args)?);
+    Ok(executor.execute(args)?)
 }

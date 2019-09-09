@@ -22,23 +22,23 @@ impl ArgParser {
     pub fn new(string: &str, descriptions: Option<Vec<&str>>) -> ArgParser {
         let descriptions = descriptions.map(|w| w.iter().map(|s| s.to_string()).collect());
 
-        return ArgParser {
+        ArgParser {
             arguments: None,
             descriptions,
             string: string.to_owned(),
-        };
+        }
     }
 
     // accessors
     pub fn arguments(&mut self) -> Option<&Vec<Argument>> {
-        return self.arguments.as_ref();
+        self.arguments.as_ref()
     }
 
     pub fn has_arguments(&self) -> Result<bool, failure::Error> {
-        return match &self.arguments {
-            Some(value) => Ok(value.len() > 0),
+        match &self.arguments {
+            Some(value) => Ok(!value.is_empty()),
             None => Err(failure::err_msg("could not found parsed caches")),
-        };
+        }
     }
 
     // methods
@@ -56,9 +56,9 @@ impl ArgParser {
 
         let mut arguments: Vec<Argument> = vec![];
         for capture in variable.captures_iter(&self.string) {
-            if let Some(_) = capture.name("index") {
+            if capture.name("index").is_some() {
                 arguments.push(self.parse_single_index(capture)?);
-            } else if let Some(_) = capture.name("start") {
+            } else if capture.name("start").is_some() {
                 arguments.push(self.parse_range_index(capture)?);
             } else {
                 return Err(failure::err_msg("not implemented yet (unknown pattern)"));
@@ -72,7 +72,7 @@ impl ArgParser {
                 .unique_by(|w| w.capture_str.to_owned())
                 .collect(),
         );
-        return Ok(());
+        Ok(())
     }
 
     fn parse_single_index(&self, captures: Captures) -> Result<Argument, failure::Error> {
@@ -86,12 +86,12 @@ impl ArgParser {
             None => None,
         };
 
-        return Ok(Argument {
+        Ok(Argument {
             capture_str: captures.get(0).unwrap().as_str().to_owned(),
             description,
             is_required: !optional,
             range: (index..(index + 1)),
-        });
+        })
     }
 
     fn parse_range_index(&self, captures: Captures) -> Result<Argument, failure::Error> {
@@ -101,28 +101,28 @@ impl ArgParser {
             .map_or_else(|| "-1".to_owned(), |w| w.as_str().to_owned());
 
         if let Ok(index) = end.parse::<usize>() {
-            return Ok(Argument {
+            Ok(Argument {
                 capture_str: captures.get(0).unwrap().as_str().to_owned(),
                 description: None, // not supported yet
                 is_required: true,
                 range: (start..index),
-            });
+            })
         } else if end == "?" {
-            return Ok(Argument {
+            Ok(Argument {
                 capture_str: captures.get(0).unwrap().as_str().to_owned(),
                 description: None, // not supported yet
                 is_required: false,
                 range: (start..std::usize::MAX),
-            });
+            })
         } else if end == "-1" {
-            return Ok(Argument {
+            Ok(Argument {
                 capture_str: captures.get(0).unwrap().as_str().to_owned(),
                 description: None, // not supported yet
                 is_required: true,
                 range: (start..std::usize::MAX),
-            });
+            })
         } else {
-            return Err(failure::err_msg(format!("invalid accessor: {}", end)));
+            Err(failure::err_msg(format!("invalid accessor: {}", end)))
         }
     }
 
@@ -148,47 +148,54 @@ impl ArgParser {
                     .iter()
                     .map(|s| s.to_string())
                     .collect::<Vec<String>>(),
-                None => match argument.is_required {
-                    true => return Err(failure::err_msg("index out of bounds or invalid access")),
-                    false => vec![],
-                },
+                None => {
+                    if argument.is_required {
+                        return Err(failure::err_msg("index out of bounds or invalid access"));
+                    } else {
+                        vec![]
+                    }
+                }
             };
 
-            if argument.is_required && params.len() == 0 {
+            if argument.is_required && params.is_empty() {
                 return Err(failure::err_msg("argument is empty"));
             }
 
             replaced = replaced.replace(&argument.capture_str, params.join(" ").as_str());
         }
 
-        return Ok(replaced.to_owned());
+        Ok(replaced.to_owned())
     }
 }
 
 impl Argument {
     pub fn description(&self) -> &str {
-        return match &self.description {
+        match &self.description {
             Some(value) => value,
-            None => match self.is_optional_range() {
-                true => "Extra arguments that passing to the original command",
-                false => "No description provided",
-            },
-        };
+            None => {
+                if self.is_optional_range() {
+                    "Extra arguments that passing to original command"
+                } else {
+                    "No description provided"
+                }
+            }
+        }
     }
 
     pub fn attribute(&self) -> &str {
-        return match &self.is_required {
-            true => "required",
-            false => "optional",
-        };
+        if self.is_required {
+            "required"
+        } else {
+            "optional"
+        }
     }
 
     fn is_unlimited_range(&self) -> bool {
-        return self.range.end == std::usize::MAX;
+        self.range.end == std::usize::MAX
     }
 
     fn is_optional_range(&self) -> bool {
-        return !self.is_required && self.is_unlimited_range();
+        !self.is_required && self.is_unlimited_range()
     }
 }
 
@@ -200,7 +207,7 @@ impl Clone for Argument {
             None => None,
         };
 
-        return Argument {
+        Argument {
             capture_str: self.capture_str.to_owned(),
             description,
             is_required: if self.is_required { true } else { false },
@@ -208,7 +215,7 @@ impl Clone for Argument {
                 start: self.range.start,
                 end: self.range.end,
             },
-        };
+        }
     }
 }
 
@@ -223,19 +230,19 @@ mod tests {
         let mut parser = ArgParser::new(string, None);
         parser.parse()?;
 
-        return Ok(parser
+        Ok(parser
             .arguments()
             .unwrap()
             .iter()
             .map(|w| w.clone())
-            .collect());
+            .collect())
     }
 
     fn unlimited_range(start: usize) -> Range<usize> {
-        return Range {
+        Range {
             start,
             end: usize::MAX,
-        };
+        }
     }
 
     #[test]

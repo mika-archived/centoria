@@ -1,7 +1,7 @@
 use clap::{App, Arg, SubCommand};
 
 pub fn build_app() -> App<'static, 'static> {
-    return App::new(crate_name!())
+     App::new(crate_name!())
         .version(crate_version!())
         .author(crate_authors!())
         .about(crate_description!())
@@ -103,5 +103,5 @@ pub fn build_app() -> App<'static, 'static> {
                         .help("name of the subcommand to display (if you pass this argument to alias or function, ignored this)")
                         .takes_value(true),
                 ),
-        );
+        )
 }

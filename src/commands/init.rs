@@ -11,5 +11,5 @@ pub fn init() -> Result<(), failure::Error> {
         println!("{}", export);
     }
 
-    return Ok(());
+    Ok(())
 }

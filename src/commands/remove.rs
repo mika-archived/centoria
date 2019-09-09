@@ -10,5 +10,5 @@ pub fn remove(args: &ArgMatches) -> Result<(), failure::Error> {
     cfg.remove(&name, program)?;
     cfg.save()?;
 
-    return Ok(());
+    Ok(())
 }
