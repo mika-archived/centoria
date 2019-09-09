@@ -109,14 +109,17 @@ impl Executor for Function {
         writeln!(&mut stdout, ": {}", execute.replace("\n", ""))?;
         stdout.flush()?;
 
-        #[rustfmt::skip]
-        match Command::new(self.shell()).args(&["-c", &execute.trim()]).status() {
-            Ok(status) => return Ok(status),
+        // #[rustfmt::skip] // this feature (attributes on expressions) is experimental
+        match Command::new(self.shell())
+            .args(&["-c", &execute.trim()])
+            .status()
+        {
+            Ok(status) => Ok(status),
             Err(e) => {
                 let msg = failure::err_msg(format!("function failed: {}", e));
-                return Err(msg);
+                Err(msg)
             }
-        };
+        }
     }
 
     fn display(&self, args: &ArgMatches) -> Result<(), failure::Error> {
