@@ -4,6 +4,7 @@ on: [push]
 
 jobs:
   build:
+    name: build
     runs-on: ubuntu-latest
 
     steps:
@@ -12,6 +13,7 @@ jobs:
         run: cargo build --verbose
 
   test:
+    name: test
     runs-on: ubuntu-latest
 
     steps:
@@ -20,6 +22,7 @@ jobs:
         run: cargo test --verbose
 
   lint:
+    name: lint (using clippy)
     runs-on: ubuntu-latest
 
     steps:
