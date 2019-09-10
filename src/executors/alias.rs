@@ -1,6 +1,8 @@
+use std::io::Write;
 use std::process::{Command, ExitStatus};
 
 use clap::ArgMatches;
+use termcolor::{Color, ColorChoice, ColorSpec, StandardStream, WriteColor};
 
 use crate::executors::Executor;
 use crate::pad;
@@ -73,10 +75,24 @@ impl Executor for Alias {
 
     fn execute(&self, args: &ArgMatches) -> Result<ExitStatus, failure::Error> {
         let extra: Option<Vec<&str>> = args.values_of("extra").map(|w| w.collect());
+        let show_verbose = args.is_present("verbose");
 
         let mut execute = self.command.to_string();
         if let Some(extra) = extra {
             execute.push_str(&format!(" {}", extra.join(" ")));
+        }
+
+        if show_verbose {
+            let mut stdout = StandardStream::stdout(ColorChoice::Always);
+            let mut clrspc = ColorSpec::new();
+            clrspc.set_bold(true).set_fg(Some(Color::Green));
+            stdout.set_color(&clrspc)?;
+            write!(&mut stdout, "Executing")?;
+
+            clrspc.set_bold(false).set_fg(None);
+            stdout.set_color(&clrspc)?;
+            writeln!(&mut stdout, ": {}", execute.replace("\n", ""))?;
+            stdout.flush()?;
         }
 
         // #[rustfmt::skip] // this feature (attributes on expressions) is experimental

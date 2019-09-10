@@ -1,7 +1,9 @@
 use std::collections::BTreeMap;
+use std::io::Write;
 use std::process::{Command, ExitStatus};
 
 use clap::ArgMatches;
+use termcolor::{Color, ColorChoice, ColorSpec, StandardStream, WriteColor};
 
 use crate::argparse::ArgParser;
 use crate::executors::Executor;
@@ -111,7 +113,20 @@ impl SubCommand {
         !self.subcommands.is_empty()
     }
 
-    fn run_command(&self, execute: &str) -> Result<ExitStatus, failure::Error> {
+    fn run_command(&self, execute: &str, show_verbose: bool) -> Result<ExitStatus, failure::Error> {
+        if show_verbose {
+            let mut stdout = StandardStream::stdout(ColorChoice::Always);
+            let mut clrspc = ColorSpec::new();
+            clrspc.set_bold(true).set_fg(Some(Color::Green));
+            stdout.set_color(&clrspc)?;
+            write!(&mut stdout, "Executing")?;
+
+            clrspc.set_bold(false).set_fg(None);
+            stdout.set_color(&clrspc)?;
+            writeln!(&mut stdout, ": {}", execute.replace("\n", ""))?;
+            stdout.flush()?;
+        }
+
         match Command::new(self.shell()).args(&["-c", execute]).status() {
             Ok(status) => Ok(status),
             Err(e) => {
@@ -154,10 +169,11 @@ impl Executor for SubCommand {
         let extra: Vec<&str> = args
             .values_of("extra")
             .map_or_else(|| vec![], |w| w.collect());
+        let show_verbose = args.is_present("verbose");
 
         // run original
         if extra.is_empty() {
-            return self.run_command(&self.command);
+            return self.run_command(&self.command, show_verbose);
         }
 
         // subcommand does not assume anything other than the single command.
@@ -165,7 +181,7 @@ impl Executor for SubCommand {
             let mut execute = self.command.to_owned();
             execute.push_str(&format!(" {}", extra.join(" ")));
 
-            return self.run_command(&execute);
+            return self.run_command(&execute, show_verbose);
         }
 
         // building
@@ -189,7 +205,7 @@ impl Executor for SubCommand {
             }
         }
 
-        self.run_command(&execute)
+        self.run_command(&execute, show_verbose)
     }
 
     fn display(&self, args: &ArgMatches) -> Result<(), failure::Error> {

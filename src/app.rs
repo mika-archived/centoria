@@ -79,6 +79,12 @@ pub fn build_app() -> App<'static, 'static> {
                         .index(1),
                 )
                 .arg(
+                    Arg::with_name("verbose")
+                    .short("v")
+                    .long("verbose")
+                    .help("show verbose")
+                )
+                .arg(
                     Arg::with_name("extra")
                         .help("extra arguments of original command")
                         .multiple(true)

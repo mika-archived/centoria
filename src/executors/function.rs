@@ -82,6 +82,7 @@ impl Executor for Function {
         let extra: Vec<&str> = args
             .values_of("extra")
             .map_or_else(|| vec![], |w| w.collect());
+        let show_verbose = args.is_present("verbose");
 
         // building
         let mut parser = ArgParser::new(&self.command, None);
@@ -98,16 +99,18 @@ impl Executor for Function {
             }
         };
 
-        let mut stdout = StandardStream::stdout(ColorChoice::Always);
-        let mut clrspc = ColorSpec::new();
-        clrspc.set_bold(true).set_fg(Some(Color::Green));
-        stdout.set_color(&clrspc)?;
-        write!(&mut stdout, "Executing")?;
+        if show_verbose {
+            let mut stdout = StandardStream::stdout(ColorChoice::Always);
+            let mut clrspc = ColorSpec::new();
+            clrspc.set_bold(true).set_fg(Some(Color::Green));
+            stdout.set_color(&clrspc)?;
+            write!(&mut stdout, "Executing")?;
 
-        clrspc.set_bold(false).set_fg(None);
-        stdout.set_color(&clrspc)?;
-        writeln!(&mut stdout, ": {}", execute.replace("\n", ""))?;
-        stdout.flush()?;
+            clrspc.set_bold(false).set_fg(None);
+            stdout.set_color(&clrspc)?;
+            writeln!(&mut stdout, ": {}", execute.replace("\n", ""))?;
+            stdout.flush()?;
+        }
 
         // #[rustfmt::skip] // this feature (attributes on expressions) is experimental
         match Command::new(self.shell())
