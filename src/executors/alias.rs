@@ -50,6 +50,14 @@ impl Alias {
             None => "sh",
         }
     }
+
+    fn format_args(&self, arg: &str) -> Result<String, ()> {
+        if arg.contains(" ") {
+            Ok(format!("\"{}\"", arg))
+        } else {
+            Ok(arg.to_owned())
+        }
+    }
 }
 
 #[typetag::serde(name = "alias")]
@@ -74,7 +82,9 @@ impl Executor for Alias {
     }
 
     fn execute(&self, args: &ArgMatches) -> Result<ExitStatus, failure::Error> {
-        let extra: Option<Vec<&str>> = args.values_of("extra").map(|w| w.collect());
+        let extra: Option<Vec<String>> = args
+            .values_of("extra")
+            .map(|w| w.map(|v| self.format_args(v).unwrap()).collect());
         let show_verbose = args.is_present("verbose");
 
         let mut execute = self.command.to_string();

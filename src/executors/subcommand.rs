@@ -113,6 +113,14 @@ impl SubCommand {
         !self.subcommands.is_empty()
     }
 
+    fn format_args(&self, arg: &str) -> Result<String, ()> {
+        if arg.contains(" ") {
+            Ok(format!("\"{}\"", arg))
+        } else {
+            Ok(arg.to_owned())
+        }
+    }
+
     fn run_command(&self, execute: &str, show_verbose: bool) -> Result<ExitStatus, failure::Error> {
         if show_verbose {
             let mut stdout = StandardStream::stdout(ColorChoice::Always);
@@ -166,9 +174,10 @@ impl Executor for SubCommand {
     }
 
     fn execute(&self, args: &ArgMatches) -> Result<ExitStatus, failure::Error> {
-        let extra: Vec<&str> = args
-            .values_of("extra")
-            .map_or_else(|| vec![], |w| w.collect());
+        let extra: Vec<String> = args.values_of("extra").map_or_else(
+            || vec![],
+            |w| w.map(|v| self.format_args(v).unwrap()).collect(),
+        );
         let show_verbose = args.is_present("verbose");
 
         // run original
