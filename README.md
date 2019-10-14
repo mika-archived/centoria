@@ -1,5 +1,7 @@
 # Centoria
+
 [![GitHub](https://img.shields.io/github/license/mika-f/centoria)](./LICENSE)
+[![Centoria at crates.io](https://img.shields.io/crates/v/centoria)](https://crates.io/crates/centoria)
 [![](https://github.com/mika-f/centoria/workflows/Rust/badge.svg)](https://github.com/mika-f/centoria/actions)
 
 Centoria - function manager for macOS and Linux.
