@@ -9,6 +9,7 @@ use crate::argparse::ArgParser;
 use crate::executors::Executor;
 use crate::fmt;
 use crate::pad;
+use crate::runner;
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct SubCommand {
@@ -121,7 +122,12 @@ impl SubCommand {
         }
     }
 
-    fn run_command(&self, execute: &str, show_verbose: bool) -> Result<ExitStatus, failure::Error> {
+    fn run_command(
+        &self,
+        execute: &str,
+        show_verbose: bool,
+        dry_run: bool,
+    ) -> Result<ExitStatus, failure::Error> {
         if show_verbose {
             let mut stdout = StandardStream::stdout(ColorChoice::Always);
             let mut clrspc = ColorSpec::new();
@@ -135,13 +141,22 @@ impl SubCommand {
             stdout.flush()?;
         }
 
-        match Command::new(self.shell()).args(&["-c", execute]).status() {
-            Ok(status) => Ok(status),
-            Err(e) => {
-                let msg = format!("function failed because {}", e);
-                Err(failure::err_msg(msg))
-            }
+        if dry_run {
+            let mut stdout = StandardStream::stdout(ColorChoice::Always);
+            let mut clrspc = ColorSpec::new();
+            clrspc.set_bold(true).set_fg(Some(Color::Blue));
+            stdout.set_color(&clrspc)?;
+            write!(&mut stdout, "dry-run")?;
+
+            clrspc.set_bold(false).set_fg(None);
+            stdout.set_color(&clrspc)?;
+            writeln!(&mut stdout, ": {}", execute.replace("\n", ""))?;
+            stdout.flush()?;
+
+            return Err(failure::err_msg("executed as a dry run"));
         }
+
+        runner::safe_run(self.shell(), execute)
     }
 
     fn shell(&self) -> &str {
@@ -179,10 +194,11 @@ impl Executor for SubCommand {
             |w| w.map(|v| self.format_args(v).unwrap()).collect(),
         );
         let show_verbose = args.is_present("verbose");
+        let dry_run = args.is_present("dry_run");
 
         // run original
         if extra.is_empty() {
-            return self.run_command(&self.command, show_verbose);
+            return self.run_command(&self.command, show_verbose, dry_run);
         }
 
         // subcommand does not assume anything other than the single command.
@@ -190,7 +206,7 @@ impl Executor for SubCommand {
             let mut execute = self.command.to_owned();
             execute.push_str(&format!(" {}", extra.join(" ")));
 
-            return self.run_command(&execute, show_verbose);
+            return self.run_command(&execute, show_verbose, dry_run);
         }
 
         // building
@@ -214,7 +230,7 @@ impl Executor for SubCommand {
             }
         }
 
-        self.run_command(&execute, show_verbose)
+        self.run_command(&execute, show_verbose, dry_run)
     }
 
     fn display(&self, args: &ArgMatches) -> Result<(), failure::Error> {

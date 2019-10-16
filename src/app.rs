@@ -1,7 +1,7 @@
 use clap::{App, Arg, SubCommand};
 
 pub fn build_app() -> App<'static, 'static> {
-     App::new(crate_name!())
+    App::new(crate_name!())
         .version(crate_version!())
         .author(crate_authors!())
         .about(crate_description!())
@@ -83,6 +83,11 @@ pub fn build_app() -> App<'static, 'static> {
                     .short("v")
                     .long("verbose")
                     .help("show verbose")
+                )
+                .arg(
+                    Arg::with_name("dry_run")
+                    .long("dry-run")
+                    .help("run command as dry-run")
                 )
                 .arg(
                     Arg::with_name("extra")
