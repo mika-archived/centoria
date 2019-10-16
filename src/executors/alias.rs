@@ -53,7 +53,7 @@ impl Alias {
     }
 
     fn format_args(&self, arg: &str) -> Result<String, ()> {
-        if arg.contains(" ") {
+        if arg.contains(' ') {
             Ok(format!("\"{}\"", arg))
         } else {
             Ok(arg.to_owned())
