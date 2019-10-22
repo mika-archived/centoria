@@ -6,6 +6,7 @@ use termcolor::{Color, ColorChoice, ColorSpec, StandardStream, WriteColor};
 
 use crate::executors::Executor;
 use crate::pad;
+use crate::runner;
 
 /**
  * alias works as shell aliases
@@ -52,7 +53,7 @@ impl Alias {
     }
 
     fn format_args(&self, arg: &str) -> Result<String, ()> {
-        if arg.contains(" ") {
+        if arg.contains(' ') {
             Ok(format!("\"{}\"", arg))
         } else {
             Ok(arg.to_owned())
@@ -105,17 +106,7 @@ impl Executor for Alias {
             stdout.flush()?;
         }
 
-        // #[rustfmt::skip] // this feature (attributes on expressions) is experimental
-        match Command::new(self.shell())
-            .args(&["-c", &execute.trim()])
-            .status()
-        {
-            Ok(status) => Ok(status),
-            Err(e) => {
-                let msg = failure::err_msg(format!("function failed: {}", e));
-                Err(msg)
-            }
-        }
+        runner::safe_run(self.shell(), execute.trim())
     }
 
     fn display(&self, args: &ArgMatches) -> Result<(), failure::Error> {
