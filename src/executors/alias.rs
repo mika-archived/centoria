@@ -20,6 +20,9 @@ pub struct Alias {
     condition: Option<String>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
+    cwd: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     description: Option<String>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -30,16 +33,19 @@ impl Alias {
     pub fn new(
         command: &str,
         condition: Option<&str>,
+        cwd: Option<&str>,
         description: Option<&str>,
         shell: Option<&str>,
     ) -> Alias {
         let condition = condition.map(|s| s.to_owned());
+        let cwd = cwd.map(|s| s.to_owned());
         let description = description.map(|s| s.to_owned());
         let shell = shell.map(|s| s.to_owned());
 
         Alias {
             command: command.to_owned(),
             condition,
+            cwd,
             description,
             shell,
         }
