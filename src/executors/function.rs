@@ -8,7 +8,7 @@ use crate::argparse::ArgParser;
 use crate::executors::Executor;
 use crate::fmt;
 use crate::pad;
-use crate::runner;
+use crate::shell;
 
 /**
  * function works as shell functions
@@ -128,7 +128,12 @@ impl Executor for Function {
             stdout.flush()?;
         }
 
-        runner::safe_run(self.shell(), execute.trim())
+        let cwd = match &self.cwd {
+            Some(value) => Some(value.to_string()),
+            None => None,
+        };
+
+        shell::safe_run(self.shell(), execute.trim(), cwd)
     }
 
     fn display(&self, args: &ArgMatches) -> Result<(), failure::Error> {

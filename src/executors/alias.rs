@@ -6,7 +6,7 @@ use termcolor::{Color, ColorChoice, ColorSpec, StandardStream, WriteColor};
 
 use crate::executors::Executor;
 use crate::pad;
-use crate::runner;
+use crate::shell;
 
 /**
  * alias works as shell aliases
@@ -112,7 +112,12 @@ impl Executor for Alias {
             stdout.flush()?;
         }
 
-        runner::safe_run(self.shell(), execute.trim())
+        let cwd = match &self.cwd {
+            Some(value) => Some(value.to_string()),
+            None => None,
+        };
+
+        shell::safe_run(self.shell(), execute.trim(), cwd)
     }
 
     fn display(&self, args: &ArgMatches) -> Result<(), failure::Error> {

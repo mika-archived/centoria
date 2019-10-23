@@ -19,7 +19,7 @@ mod config;
 mod executors;
 mod fmt;
 mod pad;
-mod runner;
+mod shell;
 
 use std::process::exit;
 
