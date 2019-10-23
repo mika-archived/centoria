@@ -7,10 +7,8 @@ pub fn safe_run(
     cwd: Option<String>,
 ) -> Result<ExitStatus, failure::Error> {
     let command = create_command(shell, command, cwd);
-    match Command::new(shell)
-        .args(&["-c", &format!("command {}", command)])
-        .status()
-    {
+
+    match Command::new(shell).args(&["-c", &command]).status() {
         Ok(status) => Ok(status),
         Err(e) => {
             let msg = failure::err_msg(format!("function failed: {}", e));
@@ -22,12 +20,12 @@ pub fn safe_run(
 fn create_command(shell: &str, command: &str, cwd: Option<String>) -> String {
     match cwd {
         Some(value) => format!(
-            "cd {} {} {}",
+            "cd {} {} command {}",
             value,
             chain_operator(shell).unwrap(),
             command
         ),
-        None => command.to_owned(),
+        None => format!("command {}", command),
     }
 }
 
@@ -62,18 +60,18 @@ mod tests {
 
     #[test]
     fn create_command_test_for_cwd_is_none() {
-        assert_eq!(create_command("bash", "ls -al", None), "ls -al");
+        assert_eq!(create_command("bash", "ls -al", None), "command ls -al");
     }
 
     #[test]
     fn create_command_test_for_cwd_is_not_none() {
         assert_eq!(
             create_command("sh", "ls -al", Some("/path/to/cwd".to_owned())),
-            "cd /path/to/cwd && ls -al"
+            "cd /path/to/cwd && command ls -al"
         );
         assert_eq!(
             create_command("fish", "ls -al", Some("/path/to/cwd".to_owned())),
-            "cd /path/to/cwd ; and ls -al"
+            "cd /path/to/cwd ; and command ls -al"
         );
     }
 }
