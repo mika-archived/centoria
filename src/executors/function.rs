@@ -8,7 +8,7 @@ use crate::argparse::ArgParser;
 use crate::executors::Executor;
 use crate::fmt;
 use crate::pad;
-use crate::runner;
+use crate::shell;
 
 /**
  * function works as shell functions
@@ -19,6 +19,9 @@ pub struct Function {
 
     #[serde(skip_serializing_if = "Option::is_none")]
     condition: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    cwd: Option<String>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     description: Option<String>,
@@ -34,16 +37,19 @@ impl Function {
     pub fn new(
         command: &str,
         condition: Option<&str>,
+        cwd: Option<&str>,
         description: Option<&str>,
         shell: Option<&str>,
     ) -> Function {
         let condition = condition.map(|s| s.to_owned());
+        let cwd = cwd.map(|s| s.to_owned());
         let description = description.map(|s| s.to_owned());
         let shell = shell.map(|s| s.to_owned());
 
         Function {
             command: command.to_owned(),
             condition,
+            cwd,
             description,
             descriptions: None,
             shell,
@@ -122,7 +128,12 @@ impl Executor for Function {
             stdout.flush()?;
         }
 
-        runner::safe_run(self.shell(), execute.trim())
+        let cwd = match &self.cwd {
+            Some(value) => Some(value.to_string()),
+            None => None,
+        };
+
+        shell::safe_run(self.shell(), execute.trim(), cwd)
     }
 
     fn display(&self, args: &ArgMatches) -> Result<(), failure::Error> {

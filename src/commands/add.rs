@@ -44,13 +44,14 @@ fn add_subcommand(args: &ArgMatches) -> Result<(), failure::Error> {
 fn construct(args: &ArgMatches) -> Box<dyn Executor> {
     let command = args.value_of("command").unwrap();
     let condition = args.value_of("condition");
+    let cwd = args.value_of("cwd");
     let description = args.value_of("description");
     let shell = args.value_of("shell");
 
     let regex = Regex::new(r"\{\d+(\.\.(\d+)?)?\}").unwrap();
     if regex.is_match(&command) {
-        Box::new(Function::new(&command, condition, description, shell))
+        Box::new(Function::new(&command, condition, cwd, description, shell))
     } else {
-        Box::new(Alias::new(&command, condition, description, shell))
+        Box::new(Alias::new(&command, condition, cwd, description, shell))
     }
 }

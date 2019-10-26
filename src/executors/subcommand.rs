@@ -9,7 +9,7 @@ use crate::argparse::ArgParser;
 use crate::executors::Executor;
 use crate::fmt;
 use crate::pad;
-use crate::runner;
+use crate::shell;
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct SubCommand {
@@ -156,7 +156,7 @@ impl SubCommand {
             return Err(failure::err_msg("executed as a dry run"));
         }
 
-        runner::safe_run(self.shell(), execute)
+        shell::safe_run(self.shell(), execute, None)
     }
 
     fn shell(&self) -> &str {

@@ -30,6 +30,12 @@ pub fn build_app() -> App<'static, 'static> {
                         .takes_value(true),
                 )
                 .arg(
+                    Arg::with_name("cwd")
+                    .long("cwd")
+                    .help("working directory for running this function, ignored on subcommand")
+                    .takes_value(true)
+                )
+                .arg(
                     Arg::with_name("description")
                         .short("d")
                         .long("description")
