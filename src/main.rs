@@ -1,16 +1,9 @@
 #[macro_use]
 extern crate clap;
-extern crate dirs;
 #[macro_use]
 extern crate downcast_rs;
-extern crate exitfailure;
-extern crate failure;
-extern crate itertools;
-extern crate regex;
-extern crate serde;
 #[macro_use]
 extern crate serde_derive;
-extern crate termcolor;
 
 mod app;
 mod argparse;
