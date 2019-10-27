@@ -1,10 +1,34 @@
 [package]
 name = "centoria"
-description = "alias manager for Linux"
-version = "0.1.0"
+description = "function manager for macOS and Linux"
+version = "0.1.1"
 authors = ["Mikazuki Fuyuno <mikazuki_fuyuno@outlook.com>"]
+repository = "https://github.com/mika-f/centoria"
+keywords = ["alias", "function"]
 edition = "2018"
 readme = "README.md"
 license = "MIT"
+categories = ["command-line-utilities"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[[bin]]
+name = "cet"
+path = "src/main.rs"
+
+[dependencies]
+clap = "2"
+dirs = "2.0"
+downcast-rs = "1.0"
+exitfailure = "0.5.1"
+failure = "0.1.5"
+itertools = "0.8"
+regex = "1"
+serde = "1.0"
+serde_derive = "1.0"
+termcolor = "1"
+toml = "0.5"
+typetag = "0.1"
+
+[build-dependencies]
+clap = "2"
